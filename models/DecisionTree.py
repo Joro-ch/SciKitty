@@ -75,6 +75,6 @@ class DecisionTree:
             print(f'{model.capitalize()} criterion for {feature}: {results}')
 
 
-target_feature = 'mamifero'
-tree = DecisionTree("mamiferos.csv")
+target_feature = 'Age'
+tree = DecisionTree("datasets/diabetes.csv")
 tree.get_min_impurity(target_feature, model="entropy")
