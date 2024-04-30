@@ -128,11 +128,6 @@ class DecisionTree:
         column_index, condition, value = rule
         return feature[column_index] == value if condition == '==' else feature[column_index] != value
 
-<<<<<<< Updated upstream
-target_feature = 'mamifero'
-tree = DecisionTree("mamiferos.csv")
-tree.get_min_impurity(target_feature, model="entropy")
-=======
     def print_tree(self, node=None, depth=0, condition="Root"):
         if node is None:
             node = self.root
@@ -161,4 +156,3 @@ tree.get_min_impurity(target_feature, model="entropy")
                 "left": self.get_tree_structure(node.left),
                 "right": self.get_tree_structure(node.right)
             }
->>>>>>> Stashed changes
