@@ -1,26 +1,39 @@
 import json
-sys.path.append('..') 
-from models.DecisionTree import Node
+import sys
+sys.path.append('..')  # Añade el directorio anterior al path para importar módulos locales
+from models.DecisionTree import Node  # Importa la clase Node del módulo DecisionTree en el directorio models
 
 class TreePersistence:
     def save_tree(self, tree, filename='tree_model.json'):
-        tree_structure = tree.get_tree_structure()
+        # Guarda la estructura del árbol en un archivo JSON
+        tree_structure = tree.get_tree_structure()  # Obtiene la estructura del árbol como un diccionario
         with open(filename, 'w') as file:
-            json.dump(tree_structure, file, indent=4)
+            json.dump(tree_structure, file, indent=4)  # Escribe la estructura del árbol en el archivo JSON con formato indentado
 
     def load_tree(self, filename='tree_model.json'):
+        # Carga la estructura del árbol desde un archivo JSON y reconstruye el árbol
         with open(filename, 'r') as file:
-            tree_structure = json.load(file)
-        return self._rebuild_tree(tree_structure)
+            tree_structure = json.load(file)  # Lee la estructura del árbol desde el archivo JSON
+        return self._rebuild_tree(tree_structure)  # Reconstruye el árbol a partir de la estructura cargada
 
     def _rebuild_tree(self, structure):
+        # Reconstruye el árbol a partir de una estructura de árbol dada (en forma de diccionario)
         if structure['type'] == 'Leaf':
+            # Si el nodo es una hoja, crea un nodo de hoja con la etiqueta correspondiente
             return Node(is_leaf=True, label=structure['label'])
         else:
-            # Suponiendo que 'rule' es almacenada como una cadena 'index == value'
+            # Si el nodo es una decisión, extrae la regla de división y reconstruye el nodo
+            # Suponiendo que 'rule' está almacenada como una cadena 'index == value'
             index, operation, value = structure['rule'].split()
-            rule = (int(index), operation, value)
-            node = Node(is_leaf=False, rule=rule)
+            rule = (int(index), operation, value)  # Convierte la cadena en una tupla de regla
+            node = Node(is_leaf=False, rule=rule)  # Crea un nodo de decisión con la regla
+            # Reconstruye recursivamente los subárboles izquierdo y derecho
             node.left = self._rebuild_tree(structure['left'])
             node.right = self._rebuild_tree(structure['right'])
-            return node
+            return node  # Devuelve el nodo reconstruido (árbol reconstruido)
+
+# Explicación de uso:
+# TreePersistence es una clase diseñada para guardar y cargar árboles de decisión en formato JSON.
+# - La función save_tree toma un objeto de árbol (tree) y lo guarda en un archivo JSON con el nombre especificado (por defecto 'tree_model.json').
+# - La función load_tree carga un árbol desde un archivo JSON previamente guardado y devuelve el árbol reconstruido.
+# - La función _rebuild_tree es un método privado que reconstruye el árbol a partir de una estructura de árbol dada en formato de diccionario.
