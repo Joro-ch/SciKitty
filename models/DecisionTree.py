@@ -3,12 +3,14 @@ import pandas as pd
 
 
 class Node:
-    def __init__(self, is_leaf=False, rule=None, label=None):
+    def __init__(self, is_leaf=False, rule=None, label=None, impurity=0, samples=0):
         self.is_leaf = is_leaf
         self.rule = rule
         self.label = label
         self.left = None
         self.right = None
+        self.impurity = impurity
+        self.samples = samples
 
     def __str__(self):
         return f"Leaf: {self.label}" if self.is_leaf else f"Rule: {self.rule}"
@@ -31,7 +33,7 @@ class DecisionTree:
         if self._should_stop_splitting(labels, features.shape[0], current_depth):
             return Node(is_leaf=True, label=self._most_common_label(labels))
 
-        best_rule = self._choose_best_rule(features, labels)
+        best_rule, best_impurity = self._choose_best_rule(features, labels)
         if not best_rule:
             return Node(is_leaf=True, label=self._most_common_label(labels))
 
@@ -42,6 +44,8 @@ class DecisionTree:
         node = Node(rule=best_rule)
         node.left = left_subtree
         node.right = right_subtree
+        node.impurity = best_impurity
+        node.samples = features.size
         return node
 
     def _should_stop_splitting(self, labels, num_samples, current_depth):
@@ -64,7 +68,7 @@ class DecisionTree:
         for index, feature in enumerate(feature_list):
             unique_values = np.unique(feature)
             is_binary = len(unique_values) == 2
-            is_categorical = not np.issubdtype(feature.dtype, np.number) and len(unique_values) > 2
+            is_categorical = isinstance(feature[0], str) and len(unique_values) > 2
 
             if not (is_binary or is_categorical):
                 continue
@@ -86,7 +90,7 @@ class DecisionTree:
                     best_impurity = impurity
                     best_rule = (index, '==', value)
 
-        return best_rule
+        return best_rule, best_impurity
 
     def _split(self, features, rule):
         column_index, condition, value = rule
@@ -149,10 +153,17 @@ class DecisionTree:
             return {"type": "Leaf", "label": node.label}
         else:
             column_name = self.feature_names[node.rule[0]]
-            condition_str = f"{column_name} {node.rule[1]} {node.rule[2]}"
+            info = f"""
+                {column_name} {node.rule[1]} {node.rule[2]}
+                {self.criterion}: {node.impurity}
+                samples: {node.samples}
+                value: [{node.left.samples}, {node.right.samples}]
+                class: {column_name}
+            """
+
             return {
                 "type": "Decision",
-                "rule": condition_str,
+                "rule": info,
                 "left": self.get_tree_structure(node.left),
                 "right": self.get_tree_structure(node.right)
             }
