@@ -1,0 +1,64 @@
+// Árbol de Decisión
+digraph {
+	hoja_2084697374400 [label="Hoja: Yes"]
+	decision_2084697667776 -> hoja_2084697374400 [label=Verdadero]
+	hoja_2084664381312 [label="Hoja: No"]
+	decision_2084697753024 -> hoja_2084664381312 [label=Verdadero]
+	hoja_2084697756352 [label="Hoja: Yes"]
+	decision_2084697753024 -> hoja_2084697756352 [label=Falso]
+	decision_2084697753024 [label="
+                Wind == Strong
+                Entropy: 0.0
+                muestras: 8
+                valor: [0, 0]
+                clase: Wind
+            "]
+	decision_2084697668288 -> decision_2084697753024 [label=Verdadero]
+	hoja_2084697752768 [label="Hoja: No"]
+	decision_2084697668288 -> hoja_2084697752768 [label=Falso]
+	decision_2084697668288 [label="
+                Outlook == Rain
+                Entropy: 0.25
+                muestras: 16
+                valor: [8, 0]
+                clase: Outlook
+            "]
+	decision_2084697667840 -> decision_2084697668288 [label=Verdadero]
+	hoja_2084697668544 [label="Hoja: No"]
+	decision_2084697666432 -> hoja_2084697668544 [label=Verdadero]
+	hoja_2084697668032 [label="Hoja: Yes"]
+	decision_2084697666432 -> hoja_2084697668032 [label=Falso]
+	decision_2084697666432 [label="
+                Wind == Strong
+                Entropy: 0.0
+                muestras: 8
+                valor: [0, 0]
+                clase: Wind
+            "]
+	decision_2084697669440 -> decision_2084697666432 [label=Verdadero]
+	hoja_2084697667904 [label="Hoja: Yes"]
+	decision_2084697669440 -> hoja_2084697667904 [label=Falso]
+	decision_2084697669440 [label="
+                Outlook == Rain
+                Entropy: 0.25
+                muestras: 16
+                valor: [8, 0]
+                clase: Outlook
+            "]
+	decision_2084697667840 -> decision_2084697669440 [label=Falso]
+	decision_2084697667840 [label="
+                Humidity == High
+                Entropy: 0.375
+                muestras: 32
+                valor: [16, 16]
+                clase: Humidity
+            "]
+	decision_2084697667776 -> decision_2084697667840 [label=Falso]
+	decision_2084697667776 [label="
+                Outlook == Overcast
+                Entropy: 0.36363636363636365
+                muestras: 44
+                valor: [0, 32]
+                clase: Outlook
+            " shape=box]
+}

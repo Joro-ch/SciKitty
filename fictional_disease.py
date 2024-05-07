@@ -11,8 +11,8 @@ import pandas as pd
 data = pd.read_csv('datasets/fictional_disease.csv')
 
 # Preparar los datos
-features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
-labels = data['Play Tennis']
+features = data.drop('Disease', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
+labels = data['Disease']
 
 # Dividir los datos
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
