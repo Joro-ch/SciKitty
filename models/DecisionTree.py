@@ -11,6 +11,7 @@ class Nodo:
         Etiqueta es el nombre del target, se utilizaa solo cuando el nodo es hoja al momento de 
         representarlo gráficamente.
         """
+        # Inicializa el nodo con los parámetros dados.
         self.es_hoja = es_hoja
         self.regla = regla
         self.etiqueta = etiqueta
@@ -49,7 +50,7 @@ class DecisionTree:
         # Inicializa el árbol de decisión con los parámetros dados.
         self.caracteristicas = np.array(caracteristicas)
         self.etiquetas = np.array(etiquetas)
-        self.nombres_caracteristicas = caracteristicas.columns.tolist() if isinstance(caracteristicas, pd.DataFrame) else [f'Característica[{i}]' for i in range(np.array(caracteristicas).shape[1])]
+        self.nombres_caracteristicas = caracteristicas.columns.tolist() if isinstance(caracteristicas, pd.DataFrame) else [f'Característica[{i}]' for i in range(np.array(caracteristicas).shape[1])] #Determinar el nombre de la característica
         self.criterio = criterio
         self.min_muestras_div = min_muestras_div
         self.max_profundidad = max_profundidad
@@ -70,17 +71,22 @@ class DecisionTree:
         de ellos un nuevo subconjunto de datos. En caso negativo, define el nodo como hoja y representará a una 
         etiqueta (la etiqueta más común que posea).
         """
+        #Caso base para la recursividad
+        #Valida los hiperparámetros: profundidad y la cantidad de la muestra
+        #Si es necesario detenerlo obtengo la etiqueta más común
         if self._detener_division(etiquetas, caracteristicas.shape[0], profundidad_actual):
             return Nodo(es_hoja=True, etiqueta=self._etiqueta_mas_comun(etiquetas))
 
+        #Escoge la característica con mejor impureza
         mejor_regla, mejor_impureza = self._elegir_mejor_regla(caracteristicas, etiquetas)
         if not mejor_regla:
             return Nodo(es_hoja=True, etiqueta=self._etiqueta_mas_comun(etiquetas))
-
+        #Se generan las divisiones recursivamente
         indices_izquierda, indices_derecha = self._dividir(caracteristicas, mejor_regla)
         subarbol_izquierdo = self._construir_arbol(caracteristicas[indices_izquierda], etiquetas[indices_izquierda], profundidad_actual + 1)
         subarbol_derecho = self._construir_arbol(caracteristicas[indices_derecha], etiquetas[indices_derecha], profundidad_actual + 1)
-
+        #Al nodo raíz se le asigna la mejor característica según su impureza
+        #Se le agrega el subárbol izquierdo y el derecho
         nodo = Nodo(regla=mejor_regla)
         nodo.izquierda = subarbol_izquierdo
         nodo.derecha = subarbol_derecho
@@ -93,8 +99,10 @@ class DecisionTree:
         Indica si hay alguna razón para detener el split, ya sea debido a hiperparámetros o debido a que el
         conjunto ya es totalmente puro.
         """
+        #Si sólo hay una etiqueta o que el número de muestras sean menores al hiperparámetro
         if len(np.unique(etiquetas)) == 1 or num_muestras < self.min_muestras_div:
             return True
+        #Verifica que la profundidad actual sea mayor o igual a la máxima profundidad
         if self.max_profundidad is not None and profundidad_actual >= self.max_profundidad:
             return True
         return False
@@ -103,8 +111,9 @@ class DecisionTree:
         """
         Devuelve la etiqueta más común en un conjunto de etiquetas.
         """
+        #Se crea un array que contiene la cantidad de conteos de cada etiqueta
         valores, conteos = np.unique(etiquetas, return_counts=True)
-        return valores[np.argmax(conteos)]
+        return valores[np.argmax(conteos)] #Se obtiene el valor máximo del array
 
     def _elegir_mejor_regla(self, caracteristicas, etiquetas):
         """
@@ -125,26 +134,32 @@ class DecisionTree:
         lista_caracteristicas = caracteristicas.T
 
         for indice, caracteristica in enumerate(lista_caracteristicas):
-            valores_unicos = np.unique(caracteristica)
-            es_binaria = len(valores_unicos) == 2
-            es_categorica = isinstance(caracteristica[0], str) and len(valores_unicos) > 2
+            
+            valores_unicos = np.unique(caracteristica) #Se guardan la cantidad de cada caracterítica
+            es_binaria = len(valores_unicos) == 2 #Verifica que la característica sea binaria
+            es_categorica = isinstance(caracteristica[0], str) and len(valores_unicos) > 2  
+            #Se guarda el resultado de la característica en un str
+            #Si su longitud es mayor a 2, entonces es una palabra (variable categórica)
 
+            #Si es una característica continua: continue
             if not (es_binaria or es_categorica):
                 continue
 
             for valor in valores_unicos:
-                mascara_division = caracteristica == valor
+                #Concepto que el profe vio ayer en clase
+                #Se crea una máscara booleana para las características con el mismo valor
+                mascara_division = caracteristica == valor 
                 etiquetas_divididas = etiquetas[mascara_division]
                 probabilidad_valor = len(etiquetas_divididas) / n_muestras
                 impureza_valor = self._calcular_impureza(etiquetas_divididas)
                 impureza = probabilidad_valor * impureza_valor
-
+                #Crea una máscara booleana para las caracteríticas con diferente valor
                 mascara_no_division = caracteristica != valor
                 etiquetas_no_divididas = etiquetas[mascara_no_division]
                 probabilidad_no_valor = len(etiquetas_no_divididas) / n_muestras
                 impureza_no_valor = self._calcular_impureza(etiquetas_no_divididas)
                 impureza += probabilidad_no_valor * impureza_no_valor
-
+                #Se busca la mejor impuera comparando la anterior con la actual
                 if impureza < mejor_impureza:
                     mejor_impureza = impureza
                     mejor_regla = (indice, '==', valor)
@@ -156,6 +171,7 @@ class DecisionTree:
         Divide el conjunto de datos dependiendo si cumplen la regla o no.
         """
         indice_columna, condicion, valor = regla
+        # Encuentra los índices que cumplen la regla (izquierda) y las que no (derecha)
         indices_izquierda = np.where(caracteristicas[:, indice_columna] == valor)[0]
         indices_derecha = np.where(caracteristicas[:, indice_columna] != valor)[0]
         return indices_izquierda, indices_derecha
@@ -200,11 +216,12 @@ class DecisionTree:
         Determina la predicción para una instancia del dataset dependiendo si sus características cumplen
         las reglas de los nodos del árbol.
         """
-        if nodo.es_hoja:
+        if nodo.es_hoja: #Si es una hoja devuelve la etiqueta como predicción
             return nodo.etiqueta
+            #Si se cumple con la regla, recursivamente valide por al subárbol izquierdo
         if self._seguir_regla(caracteristica, nodo.regla):
             return self._predict_individual(caracteristica, nodo.izquierda)
-        else:
+        else: #Si no se cumple la regla, recursivamente valide por el subárbol derecho
             return self._predict_individual(caracteristica, nodo.derecha)
 
     def _seguir_regla(self, caracteristica, regla):
@@ -212,6 +229,7 @@ class DecisionTree:
         Devuelve el booleano que indica si cumple o no la regla dependiendo si la regla es == o !=.
         """
         indice_columna, condicion, valor = regla
+        #Comprueba si la característica cumple con la regla a seguir
         return caracteristica[indice_columna] == valor if condicion == '==' else caracteristica[indice_columna] != valor
 
     def imprimir_arbol(self, nodo=None, profundidad=0, condicion="Raíz"):
@@ -224,10 +242,12 @@ class DecisionTree:
         if nodo.es_hoja:
             print(f"{'|   ' * profundidad}{condicion} -> Hoja: {nodo.etiqueta}")
         else:
+            #Toma el nombre de la característica según la regla actual
             nombre_columna = self.nombres_caracteristicas[nodo.regla[0]]
             condicion_str = f"{nombre_columna} {nodo.regla[1]} {nodo.regla[2]}"
             print(f"{'|   ' * profundidad}{condicion} -> {condicion_str}")
-            self.imprimir_arbol(nodo.izquierda, profundidad + 1, f"{condicion_str}")
+            #Llama recursivamente a la función con respectoal subárbol izquierdo y derecho
+            self.imprimir_arbol(nodo.izquierda, profundidad + 1, f"{condicion_str}") 
             self.imprimir_arbol(nodo.derecha, profundidad + 1, f"No {condicion_str}")
 
     def get_tree_structure(self, nodo=None):
@@ -239,10 +259,11 @@ class DecisionTree:
         if nodo is None:
             nodo = self.raiz
 
-        if nodo.es_hoja:
+        if nodo.es_hoja: #Si es una hoja retorna la siguiente información
             return {"tipo": "Hoja", "etiqueta": nodo.etiqueta}
         else:
             nombre_columna = self.nombres_caracteristicas[nodo.regla[0]]
+            #Guarda la información relevante del nodo
             info = f"""
                 {nombre_columna} {nodo.regla[1]} {nodo.regla[2]}
                 {self.criterio}: {nodo.impureza}
@@ -250,10 +271,10 @@ class DecisionTree:
                 valor: [{nodo.izquierda.muestras}, {nodo.derecha.muestras}]
                 clase: {nombre_columna}
             """
-
+            #Devuelve la información relevante del nodo
             return {
                 "tipo": "Decision",
                 "regla": info,
-                "izquierda": self.get_tree_structure(nodo.izquierda),
-                "derecha": self.get_tree_structure(nodo.derecha)
+                "izquierda": self.get_tree_structure(nodo.izquierda), #Obtiene la estructura izquierda
+                "derecha": self.get_tree_structure(nodo.derecha) #Obtiene la estructua derecha
             }

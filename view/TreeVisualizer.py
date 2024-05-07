@@ -26,11 +26,11 @@ class TreeVisualizer:
 
         if padre:
             # Agrega el nodo actual al grafo y una conexión desde el nodo padre
-            self.grafo.nodo(nombre_nodo, label=etiqueta_nodo)
+            self.grafo.node(nombre_nodo, label=etiqueta_nodo)
             self.grafo.edge(padre, nombre_nodo, label=etiqueta_arista)
         else:
             # Si es la raíz del árbol, establece la forma del nodo como 'box' y establece como texto el nombre de la etiqueta predicha (target).
-            self.grafo.nodo(nombre_nodo, label=etiqueta_nodo, shape='box')
+            self.grafo.node(nombre_nodo, label=etiqueta_nodo, shape='box')
 
     def get_graph(self, nombre_archivo='arbol', ver=True):
         """
