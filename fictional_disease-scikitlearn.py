@@ -27,7 +27,7 @@ dt.fit(X_train, y_train)
 # Visualizar el árbol
 plt.figure(figsize=(12, 8))
 plot_tree(dt, filled=True, feature_names=X_train.columns.tolist(), class_names=dt.classes_.tolist())
-plt.savefig(f'{file_name}_tree-sklearn.png')
+plt.savefig(f'{file_name}_tree-scikitlearn.png')
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)

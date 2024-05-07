@@ -1,20 +1,23 @@
 from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # Se almacena el nombre del archivo donde se guarda el dataset
-file_name = 'fictional_reading_place'
+file_name = 'playTennis'
 
 # Cargar los datos
 data = pd.read_csv(f'datasets/{file_name}.csv')
 
-# Codificar características categóricas
+# Preparar los datos
+features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
+labels = data['Play Tennis']
+
+# Codificar las variables categóricas
 encoder = OneHotEncoder()
-features_encoded = encoder.fit_transform(data.drop('user_action', axis=1)).toarray()
-labels = data['user_action']
+features_encoded = encoder.fit_transform(features)
 
 # Dividir los datos
 X_train, X_test, y_train, y_test = train_test_split(features_encoded, labels, test_size=0.2, random_state=42)
@@ -24,9 +27,9 @@ dt = DecisionTreeClassifier(criterion='entropy', min_samples_split=2, max_depth=
 dt.fit(X_train, y_train)
 
 # Visualizar el árbol
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(10,6))
 plot_tree(dt, feature_names=encoder.get_feature_names_out().tolist(), class_names=dt.classes_.tolist(), filled=True)
-plt.savefig(f'{file_name}_tree-sklearn.png')
+plt.savefig(f'{file_name}_tree-scikitlearn.png')
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)

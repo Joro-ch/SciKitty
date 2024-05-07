@@ -29,7 +29,7 @@ dt.fit()
 tree_structure = dt.get_tree_structure()
 visualizer = TreeVisualizer()
 visualizer.graph_tree(tree_structure)
-visualizer.get_graph(f'{file_name}_tree')  # Esto generará el archivo 'tree_output.png' en el directorio actual
+visualizer.get_graph(f'{file_name}_tree', ver=True)
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)

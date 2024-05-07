@@ -38,19 +38,20 @@ python fictional_reading_place.py
 ```
 python playTennis.py
 ```
-En el caso de poder compararlo con las salidas de la librería de Skitlearn, necesitará ubicarse en el directorio 'skitlearn' .
+En el caso de poder compararlo con las salidas de la librería de Scikit Learn, puede ejecutar los siguientes scripts,
+para comparar los resultados de las dos librerias:
 
-* Para poder ejecutar el resultado de skitlearn del dataset fictional_disease.csv: 
+* Para poder ejecutar el resultado de scikitlearn del dataset fictional_disease.csv: 
 ```
-python fictional_disease-sklearn.py
+python fictional_disease-scikitlearn.py
 ```
-* Para poder ejecutar el resultado de skitlearn del dataset fictional_reading_place.csv
+* Para poder ejecutar el resultado de scikitlearn del dataset fictional_reading_place.csv:
 ```
-python ...fictional_reading_place-sklearn.py
+python fictional_reading_place-scikitlearn.py
 ```
-* Para poder ejecutar el resultado de skitlearn del dataset playTennis.csv
+* Para poder ejecutar el resultado de scikitlearn del dataset playTennis.csv:
 ```
-python ... playTennis-sklearn.py
+python playTennis-scikitlearn.py
 ```
 
 ### 5) Salidas:
