@@ -58,6 +58,7 @@ class DecisionTree:
         self.min_muestras_div = min_muestras_div
         self.max_profundidad = max_profundidad
         self.raiz = None
+        self.etiquetas_originales = np.unique(etiquetas)
 
     def is_balanced(self, umbral=0.5):
         """
@@ -82,7 +83,7 @@ class DecisionTree:
         self.raiz = self._construir_arbol(
         self.caracteristicas, self.etiquetas, 0)
 
-    def _construir_arbol(self, caracteristicas, etiquetas, profundidad_actual):
+    def _construir_arbol(self, caracteristicas, etiquetas, profundidad_actual, direccion='izquierda'):
         """
             Valida si se debe seguir dividiendo el conjunto de datos, en caso afirmativo, busca la mejor regla de
             división y divide el conjunto de datos en izquierda y derecha según la regla de división y llama 
@@ -90,21 +91,36 @@ class DecisionTree:
             de ellos un nuevo subconjunto de datos. En caso negativo, define el nodo como hoja y representará a una 
             etiqueta (la etiqueta más común que posea).
         """
-        # Caso base para la recursividad
-        # Valida los hiperparámetros: profundidad y la cantidad de la muestra
-        # Si es necesario detenerlo obtengo la etiqueta más común
-        if self._detener_division(etiquetas, caracteristicas.shape[0], profundidad_actual):
-            return Nodo(es_hoja=True, etiqueta=self._etiqueta_mas_comun(etiquetas))
 
         # Escoge la característica con mejor impureza
         mejor_regla, mejor_impureza = self._elegir_mejor_regla(
             caracteristicas, etiquetas)
-        if not mejor_regla:
-            return Nodo(es_hoja=True, etiqueta=self._etiqueta_mas_comun(etiquetas))
+
+        indices_izquierda = indices_derecha = 0
+        if mejor_regla:
+            # Se generan las divisiones recursivamente
+            indices_izquierda, indices_derecha = self._dividir(
+                caracteristicas, mejor_regla)
         
-        # Se generan las divisiones recursivamente
-        indices_izquierda, indices_derecha = self._dividir(
-            caracteristicas, mejor_regla)
+        # Caso base para la recursividad
+        # Valida los hiperparámetros: profundidad y la cantidad de la muestra
+        # Si es necesario detenerlo obtengo la etiqueta más común
+        if self._detener_division(etiquetas, caracteristicas.shape[0], profundidad_actual):
+            return Nodo(es_hoja=True, 
+                        etiqueta=self._etiqueta_mas_comun(etiquetas), 
+                        impureza=self._calcular_impureza(etiquetas),
+                        muestras=etiquetas.size,
+                        etiquetas=etiquetas,
+                        )
+
+        if not mejor_regla:
+            return Nodo(es_hoja=True, 
+                        etiqueta=self._etiqueta_mas_comun(etiquetas), 
+                        impureza=self._calcular_impureza(etiquetas),
+                        muestras=etiquetas.size,
+                        etiquetas=etiquetas
+                        )
+        
         subarbol_izquierdo = self._construir_arbol(
             caracteristicas[indices_izquierda], etiquetas[indices_izquierda], profundidad_actual + 1)
         subarbol_derecho = self._construir_arbol(
@@ -322,7 +338,33 @@ class DecisionTree:
 
         # Si es una hoja retorna la siguiente información
         if nodo.es_hoja:
-            return {"tipo": "Hoja", "etiqueta": nodo.etiqueta}
+            entropyNumber = round(nodo.impureza, 3)
+
+            if entropyNumber <= -0.0:
+                entropyNumber = 0
+
+            etiquetasUnicas, count = np.unique(nodo.etiquetas, return_counts=True)
+
+            print(self.etiquetas_originales)
+
+            valor = ""
+            if self.etiquetas_originales[0] == etiquetasUnicas[0]:
+                valor = f"[{count[0]}, 0]"
+            else:
+                valor = f"[0, {count[0]}]"
+
+            # Guarda la información relevante del nodo
+            info = f"""
+                {self.criterio}: {entropyNumber}
+                muestras: {nodo.muestras}
+                valor: {valor}
+                clase: {self._etiqueta_mas_comun(nodo.etiquetas)}
+            """
+
+            return {
+                "tipo": "Hoja", 
+                "regla": info
+            }
         else:
             nombre_columna = self.nombres_caracteristicas[nodo.regla[0]]
 

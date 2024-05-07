@@ -15,7 +15,7 @@ class TreeVisualizer:
         """
         if estructura_arbol['tipo'] == 'Hoja':
             # Si es un nodo hoja, establece la etiqueta del nodo como "Hoja: <etiqueta>"
-            etiqueta_nodo = f"Hoja: {estructura_arbol['etiqueta']}"
+            etiqueta_nodo = estructura_arbol['regla']
             nombre_nodo = f"hoja_{id(estructura_arbol)}"
             color = 'lightgreen'  # Color claro para las hojas
         else:
@@ -25,8 +25,20 @@ class TreeVisualizer:
             color = 'lightblue'  # Color claro para los nodos de decisión
 
             # Recursivamente grafica los subárboles izquierdo y derecho con posiciones ajustadas
-            self.graph_tree(estructura_arbol['izquierda'], padre=nombre_nodo, etiqueta_arista='True', nivel=nivel+1, posicion=posicion-distancia_entre_nodos, distancia_entre_nodos=distancia_entre_nodos/1.5, distancia_vertical=distancia_vertical)
-            self.graph_tree(estructura_arbol['derecha'], padre=nombre_nodo, etiqueta_arista='False', nivel=nivel+1, posicion=posicion+distancia_entre_nodos, distancia_entre_nodos=distancia_entre_nodos/1.5, distancia_vertical=distancia_vertical)
+            self.graph_tree(estructura_arbol['izquierda'], 
+                            padre=nombre_nodo, 
+                            etiqueta_arista='True', 
+                            nivel=nivel+1, 
+                            posicion=posicion-distancia_entre_nodos, 
+                            distancia_entre_nodos=distancia_entre_nodos/1.5, 
+                            distancia_vertical=distancia_vertical)
+            self.graph_tree(estructura_arbol['derecha'], 
+                            padre=nombre_nodo, 
+                            etiqueta_arista='False', 
+                            nivel=nivel+1, 
+                            posicion=posicion+distancia_entre_nodos, 
+                            distancia_entre_nodos=distancia_entre_nodos/1.5, 
+                            distancia_vertical=distancia_vertical)
 
         # Calcula la posición del nodo actual y lo agrega al grafo
         x_pos = posicion
