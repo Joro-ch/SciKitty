@@ -8,7 +8,11 @@ from Scikitty.metrics.confusion_matrix import matriz_de_confusion
 from Scikitty.model_selection.train_test_split import train_test_split
 import pandas as pd
 
-data = pd.read_csv('datasets/playTennis.csv')
+# Se almacena el nombre del archivo donde se guarda el dataset
+file_name = 'playTennis'
+
+# Cargar los datos
+data = pd.read_csv(f'datasets/{file_name}.csv')
 
 # Preparar los datos
 features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
@@ -25,7 +29,7 @@ dt.fit()
 tree_structure = dt.get_tree_structure()
 visualizer = TreeVisualizer()
 visualizer.graph_tree(tree_structure)
-visualizer.get_graph('tree_output')  # Esto generará el archivo 'tree_output.png' en el directorio actual
+visualizer.get_graph(f'{file_name}_tree')  # Esto generará el archivo 'tree_output.png' en el directorio actual
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)

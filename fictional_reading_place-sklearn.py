@@ -5,7 +5,11 @@ from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data = pd.read_csv('datasets/fictional_reading_place.csv')
+# Se almacena el nombre del archivo donde se guarda el dataset
+file_name = 'fictional_reading_place'
+
+# Cargar los datos
+data = pd.read_csv(f'datasets/{file_name}.csv')
 
 # Codificar características categóricas
 encoder = OneHotEncoder()
@@ -22,7 +26,7 @@ dt.fit(X_train, y_train)
 # Visualizar el árbol
 plt.figure(figsize=(12, 8))
 plot_tree(dt, feature_names=encoder.get_feature_names_out().tolist(), class_names=dt.classes_.tolist(), filled=True)
-plt.savefig('tree_output.png')
+plt.savefig(f'{file_name}_tree-sklearn.png')
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)
