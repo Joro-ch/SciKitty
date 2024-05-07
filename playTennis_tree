@@ -1,64 +1,64 @@
 // Árbol de Decisión
 digraph {
-	hoja_2591347917056 [label="Hoja: Yes"]
-	decision_2591348260992 -> hoja_2591347917056 [label=Verdadero]
-	hoja_2591348294912 [label="Hoja: No"]
-	decision_2591348264192 -> hoja_2591348294912 [label=Verdadero]
-	hoja_2591348267456 [label="Hoja: Yes"]
-	decision_2591348264192 -> hoja_2591348267456 [label=Falso]
-	decision_2591348264192 [label="
+	hoja_3040996739968 [label="Hoja: Yes"]
+	decision_3040997033920 -> hoja_3040996739968 [label=Verdadero]
+	hoja_3040997083136 [label="Hoja: No"]
+	decision_3040997037184 -> hoja_3040997083136 [label=Verdadero]
+	hoja_3040997040512 [label="Hoja: Yes"]
+	decision_3040997037184 -> hoja_3040997040512 [label=Falso]
+	decision_3040997037184 [label="
                 Wind == Strong
-                Entropy: 0.0
-                muestras: 8
+                Entropy: 1.0
+                muestras: 2
                 valor: [0, 0]
-                clase: Wind
+                clase: No
             "]
-	decision_2591348261504 -> decision_2591348264192 [label=Verdadero]
-	hoja_2591348263936 [label="Hoja: No"]
-	decision_2591348261504 -> hoja_2591348263936 [label=Falso]
-	decision_2591348261504 [label="
+	decision_3040997034432 -> decision_3040997037184 [label=Verdadero]
+	hoja_3040997036928 [label="Hoja: No"]
+	decision_3040997034432 -> hoja_3040997036928 [label=Falso]
+	decision_3040997034432 [label="
                 Outlook == Rain
-                Entropy: 0.25
-                muestras: 16
-                valor: [8, 0]
-                clase: Outlook
+                Entropy: 0.811
+                muestras: 4
+                valor: [2, 0]
+                clase: No
             "]
-	decision_2591348261056 -> decision_2591348261504 [label=Verdadero]
-	hoja_2591348261760 [label="Hoja: No"]
-	decision_2591348161280 -> hoja_2591348261760 [label=Verdadero]
-	hoja_2591348261248 [label="Hoja: Yes"]
-	decision_2591348161280 -> hoja_2591348261248 [label=Falso]
-	decision_2591348161280 [label="
+	decision_3040997033984 -> decision_3040997034432 [label=Verdadero]
+	hoja_3040997034688 [label="Hoja: No"]
+	decision_3040997032576 -> hoja_3040997034688 [label=Verdadero]
+	hoja_3040997034176 [label="Hoja: Yes"]
+	decision_3040997032576 -> hoja_3040997034176 [label=Falso]
+	decision_3040997032576 [label="
                 Wind == Strong
-                Entropy: 0.0
-                muestras: 8
+                Entropy: 1.0
+                muestras: 2
                 valor: [0, 0]
-                clase: Wind
+                clase: No
             "]
-	decision_2591348262656 -> decision_2591348161280 [label=Verdadero]
-	hoja_2591348261120 [label="Hoja: Yes"]
-	decision_2591348262656 -> hoja_2591348261120 [label=Falso]
-	decision_2591348262656 [label="
+	decision_3040997035520 -> decision_3040997032576 [label=Verdadero]
+	hoja_3040997034048 [label="Hoja: Yes"]
+	decision_3040997035520 -> hoja_3040997034048 [label=Falso]
+	decision_3040997035520 [label="
                 Outlook == Rain
-                Entropy: 0.25
-                muestras: 16
-                valor: [8, 0]
-                clase: Outlook
+                Entropy: 0.811
+                muestras: 4
+                valor: [2, 0]
+                clase: Yes
             "]
-	decision_2591348261056 -> decision_2591348262656 [label=Falso]
-	decision_2591348261056 [label="
+	decision_3040997033984 -> decision_3040997035520 [label=Falso]
+	decision_3040997033984 [label="
                 Humidity == High
-                Entropy: 0.375
-                muestras: 32
-                valor: [16, 16]
-                clase: Humidity
+                Entropy: 1.0
+                muestras: 8
+                valor: [4, 4]
+                clase: No
             "]
-	decision_2591348260992 -> decision_2591348261056 [label=Falso]
-	decision_2591348260992 [label="
+	decision_3040997033920 -> decision_3040997033984 [label=Falso]
+	decision_3040997033920 [label="
                 Outlook == Overcast
-                Entropy: 0.36363636363636365
-                muestras: 44
-                valor: [0, 32]
-                clase: Outlook
+                Entropy: 0.946
+                muestras: 11
+                valor: [0, 8]
+                clase: Yes
             " shape=box]
 }

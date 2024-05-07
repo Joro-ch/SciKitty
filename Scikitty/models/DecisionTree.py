@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 class Nodo:
-    def __init__(self, es_hoja=False, regla=None, etiqueta=None, impureza=0, muestras=0):
+    def __init__(self, es_hoja=False, regla=None, etiqueta=None, impureza=0, muestras=0, etiquetas=[]):
         """
             Inicializa un nodo del árbol de decisión, cada nodo tiene su regla de división además
             de un atributo que indica si es un nodo final (hoja). Nuestro algoritmo está diseñado
@@ -20,6 +20,7 @@ class Nodo:
         self.derecha = None
         self.impureza = impureza
         self.muestras = muestras
+        self.etiquetas = etiquetas
 
     def __str__(self):
         """
@@ -58,7 +59,7 @@ class DecisionTree:
         self.max_profundidad = max_profundidad
         self.raiz = None
 
-    def es_balanceado(self, umbral=0.5):
+    def is_balanced(self, umbral=0.5):
         """
             Evalúa si el dataset está balanceado basándose en un umbral de balance.
             Un dataset se considera balanceado si la proporción de la clase minoritaria respecto
@@ -114,8 +115,10 @@ class DecisionTree:
         nodo = Nodo(regla=mejor_regla)
         nodo.izquierda = subarbol_izquierdo
         nodo.derecha = subarbol_derecho
-        nodo.impureza = mejor_impureza
-        nodo.muestras = caracteristicas.size
+        nodo.impureza = self._calcular_impureza(etiquetas)
+        nodo.muestras = etiquetas.size
+        nodo.etiquetas = etiquetas
+
         return nodo
 
     def _detener_division(self, etiquetas, num_muestras, profundidad_actual):
@@ -214,9 +217,18 @@ class DecisionTree:
     def _calcular_impureza(self, etiquetas):
         """
             Escoge que criterio usar y devuelve la impureza calculada respecto a las etiquetas
-            dependiendo del criterio escogido por el usuario en la definición del árbol de decisión.
+            dependiendo del criterio escogido por el usuario en la definición del árbol de decisión
+            para etiquetas multiclase o binarias, o MSE para etiquetas contínuas (target contínuo).
         """
-        if self.criterio == 'Entropía':
+        # Determinar si las etiquetas son continuas (no categoricas y no binarias)
+
+        valores_unicos = np.unique(etiquetas)
+        es_binaria = len(valores_unicos) <= 2
+        es_categorica = isinstance(etiquetas[0], str) and len(valores_unicos) > 2
+
+        if not (es_binaria or es_categorica):
+            return self._calcular_mse(etiquetas)
+        elif self.criterio == 'Entropy':
             return self._calcular_entropia(etiquetas)
         else:
             return self._calcular_gini(etiquetas)
@@ -234,7 +246,7 @@ class DecisionTree:
         """
             Devuelve la impureza utilizando las probabilidades de cada etiqueta usando el criterio gini.
         """
-        _, conteos = np.unique(etiquetas, return_counts=True)
+        a, conteos = np.unique(etiquetas, return_counts=True)
         probabilidades = conteos / conteos.sum()
         gini = 1 - np.sum(probabilidades ** 2)
         return gini
@@ -317,10 +329,10 @@ class DecisionTree:
             # Guarda la información relevante del nodo
             info = f"""
                 {nombre_columna} {nodo.regla[1]} {nodo.regla[2]}
-                {self.criterio}: {nodo.impureza}
+                {self.criterio}: {round(nodo.impureza, 3)}
                 muestras: {nodo.muestras}
                 valor: [{nodo.izquierda.muestras}, {nodo.derecha.muestras}]
-                clase: {nombre_columna}
+                clase: {self._etiqueta_mas_comun(nodo.etiquetas)}
             """
 
             # Devuelve la información relevante del nodo
