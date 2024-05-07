@@ -1,64 +1,34 @@
 // Árbol de Decisión
 digraph {
-	hoja_2084697374400 [label="Hoja: Yes"]
-	decision_2084697667776 -> hoja_2084697374400 [label=Verdadero]
-	hoja_2084664381312 [label="Hoja: No"]
-	decision_2084697753024 -> hoja_2084664381312 [label=Verdadero]
-	hoja_2084697756352 [label="Hoja: Yes"]
-	decision_2084697753024 -> hoja_2084697756352 [label=Falso]
-	decision_2084697753024 [label="
-                Wind == Strong
+	hoja_1567083363200 [label="Hoja: skips"]
+	decision_1567083658624 -> hoja_1567083363200 [label=Verdadero]
+	hoja_1567083791168 [label="Hoja: skips"]
+	decision_1567083658368 -> hoja_1567083791168 [label=Verdadero]
+	hoja_1567083762752 [label="Hoja: skips"]
+	decision_1567083759296 -> hoja_1567083762752 [label=Verdadero]
+	hoja_1567083759552 [label="Hoja: reads"]
+	decision_1567083759296 -> hoja_1567083759552 [label=Falso]
+	decision_1567083759296 [label="
+                example == e7
                 Entropy: 0.0
-                muestras: 8
+                muestras: 45
                 valor: [0, 0]
-                clase: Wind
+                clase: example
             "]
-	decision_2084697668288 -> decision_2084697753024 [label=Verdadero]
-	hoja_2084697752768 [label="Hoja: No"]
-	decision_2084697668288 -> hoja_2084697752768 [label=Falso]
-	decision_2084697668288 [label="
-                Outlook == Rain
-                Entropy: 0.25
-                muestras: 16
-                valor: [8, 0]
-                clase: Outlook
+	decision_1567083658368 -> decision_1567083759296 [label=Falso]
+	decision_1567083658368 [label="
+                example == e11
+                Entropy: 0.17777777777777778
+                muestras: 50
+                valor: [0, 45]
+                clase: example
             "]
-	decision_2084697667840 -> decision_2084697668288 [label=Verdadero]
-	hoja_2084697668544 [label="Hoja: No"]
-	decision_2084697666432 -> hoja_2084697668544 [label=Verdadero]
-	hoja_2084697668032 [label="Hoja: Yes"]
-	decision_2084697666432 -> hoja_2084697668032 [label=Falso]
-	decision_2084697666432 [label="
-                Wind == Strong
-                Entropy: 0.0
-                muestras: 8
-                valor: [0, 0]
-                clase: Wind
-            "]
-	decision_2084697669440 -> decision_2084697666432 [label=Verdadero]
-	hoja_2084697667904 [label="Hoja: Yes"]
-	decision_2084697669440 -> hoja_2084697667904 [label=Falso]
-	decision_2084697669440 [label="
-                Outlook == Rain
-                Entropy: 0.25
-                muestras: 16
-                valor: [8, 0]
-                clase: Outlook
-            "]
-	decision_2084697667840 -> decision_2084697669440 [label=Falso]
-	decision_2084697667840 [label="
-                Humidity == High
-                Entropy: 0.375
-                muestras: 32
-                valor: [16, 16]
-                clase: Humidity
-            "]
-	decision_2084697667776 -> decision_2084697667840 [label=Falso]
-	decision_2084697667776 [label="
-                Outlook == Overcast
-                Entropy: 0.36363636363636365
-                muestras: 44
-                valor: [0, 32]
-                clase: Outlook
+	decision_1567083658624 -> decision_1567083658368 [label=Falso]
+	decision_1567083658624 [label="
+                length == long
+                Entropy: 0.22857142857142845
+                muestras: 70
+                valor: [0, 50]
+                clase: length
             " shape=box]
 }
