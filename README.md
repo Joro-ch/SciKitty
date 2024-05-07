@@ -15,17 +15,47 @@ pip install graphviz
 En este proyecto se usando tres datasets en específico:
 1. **fictional_disease.csv:** En este dataset se busca poder predecir si una persona es enferma o no, por medio de característica como la edad, el género y su historial de fumador.
 
-2. **fictional_reading_place.csv: ** Para este dataset se intenta predecir si un lector lee o se salta una lectura, según características como el autor, hilo, longitud y el lugar de lectura. 
+2. **fictional_reading_place.csv:** Para este dataset se intenta predecir si un lector lee o se salta una lectura, según características como el autor, hilo, longitud y el lugar de lectura. 
 
-3. **playTennis.csv: **Con este dataset se busca saber si se juega tennis por medio de características como el clima, la temperatura, la humedad y el viento.
+3. **playTennis.csv:** Con este dataset se busca saber si se juega tennis por medio de características como el clima, la temperatura, la humedad y el viento.
 
 Sin embargo para este proyecto sólo se tomarán las características categóricas binarias.
 
 ### 4) ¿Cómo ejecutar el proyecto?
-En este proyecto se tendrán 3 archivos los cuales serán los que se ejecuten, en donde cada uno tendrá uno de los dataset mencionados anteriormente. Para poder ejecutar los archivo se tendrá que correr el "" , ya sea desde la consola de anaconda o un IDE de preferencia. Dentro de este ya se encuentra un dataset ingresador al modelo, para efecto de una primera prueba.
+Para poder ejecuta cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
+* Abrir Anaconda prompt
+* Se debe de ubicar en el directorio 'scripts' del proyecto, en donde se encuentran los scripts correspondiente a cada uno de los dataset. Para poder ejecutar cada uno de ellos, es necesario colocar los siguientes comandos:
+
+* Para poder ejecutar el árbol de decisión de fictional_disease.csv: 
+```
+python fictional_disease.py
+```
+* Para poder ejecutar el árbol de decisión de fictional_reading_place.csv 
+```
+python fictional_reading_place.py
+```
+* Para poder ejecutar el árbol de decisión de playTennis.csv: 
+```
+python playTennis.py
+```
+En el caso de poder compararlo con las salidas de la librería de Skitlearn, necesitará ubicarse en el directorio 'skitlearn' .
+
+* Para poder ejecutar el resultado de skitlearn del dataset fictional_disease.csv: 
+```
+python fictional_disease-sklearn.py
+```
+* Para poder ejecutar el resultado de skitlearn del dataset fictional_reading_place.csv
+```
+python ...fictional_reading_place-sklearn.py
+```
+* Para poder ejecutar el resultado de skitlearn del dataset playTennis.csv
+```
+python ... playTennis-sklearn.py
+```
 
 ### 5) Salidas:
 Una vez ejecutado el archivo se mostrarán el resultado de los datos de prueba y los resultados reales para poder comparar la predicción del árbol y también la librería graphviz creará una representación del árbol de decisión que respeta los hiperparámetros
+*** Se debe de  agregar las metrics?
 
 ### 6) Hiperparámetros
 En caso de querer poder cambiar los hiperparámetros, se tendrá que modificar directamente el archivo a ejecutar en donde se podrán reconocer las variables:
