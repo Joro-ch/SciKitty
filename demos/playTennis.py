@@ -45,6 +45,7 @@ X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=
 
 # Crear e instanciar el árbol de decisión
 dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+print(X_train)
 dt.fit()
 
 # Visualizar el árbol
