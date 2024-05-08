@@ -23,6 +23,8 @@
 """
 # --------------------------------------------------------------------------------- #
 """
+-----------------------SCRIPT fictional_reading_place SCI-KIT LEARN----------------------------
+
     Este script demuestra el uso de varias funcionalidades en el módulo scikit-learn:
     - Cargar un dataset.
     - Codificar características categóricas.

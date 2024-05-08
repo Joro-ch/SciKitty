@@ -77,7 +77,7 @@ labels = data['Play Tennis']
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el árbol de decisión
-dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
 print(X_train)
 dt.fit()
 
@@ -110,7 +110,7 @@ TreePersistence.save_tree(dt, 'playTennis.json')
 
 # Cargar el árbol desde el archivo JSON
 nueva_raiz = TreePersistence.load_tree('playTennis.json')
-nuevo_dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+nuevo_dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
 nuevo_dt.set_tree(nueva_raiz)
 
 # Visualizar el árbol cargado

@@ -23,6 +23,8 @@
 """
 # --------------------------------------------------------------------------------- #
 """
+-----------------------SCRIPT CO2_car_emision SCI-KIT LEARN----------------------------
+
     Este script demuestra el uso de varias funcionalidades en el módulo scikit-learn:
     - Cargar un dataset.
     - Codificar variables categóricas.

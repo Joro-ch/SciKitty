@@ -23,6 +23,8 @@
 """
 # --------------------------------------------------------------------------------- #
 """
+-----------------------SCRIPT playTennis SCI-KIT LEARN----------------------------
+
     Este script demuestra el uso de varias funcionalidades en el módulo scikit-learn:
     - Cargar un dataset.
     - Preparar los datos.
@@ -59,7 +61,7 @@ features_encoded = encoder.fit_transform(features)
 X_train, X_test, y_train, y_test = train_test_split(features_encoded, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el árbol de decisión
-dt = DecisionTreeClassifier(criterion='gini', min_samples_split=2, max_depth=5, random_state=42)
+dt = DecisionTreeClassifier(criterion='entropy', min_samples_split=2, max_depth=5, random_state=42)
 dt.fit(X_train, y_train)
 
 # Visualizar el árbol
