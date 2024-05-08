@@ -43,41 +43,43 @@ from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Se almacena el nombre del archivo donde se guarda el dataset
+# Se almacena el nombre del archivo donde se guarda el dataset.
 file_name = 'playTennis'
 
-# Cargar los datos
+# Cargar los datos.
 data = pd.read_csv(f'../datasets/{file_name}.csv')
 
-# Preparar los datos
+# Preparar los datos.
 features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
 labels = data['Play Tennis']
 
-# Codificar las variables categóricas
+# Codificar las variables categóricas.
 encoder = OneHotEncoder()
 features_encoded = encoder.fit_transform(features)
 
-# Dividir los datos
+# Dividir los datos.
 X_train, X_test, y_train, y_test = train_test_split(features_encoded, labels, test_size=0.2, random_state=42)
 
-# Crear e instanciar el árbol de decisión
+# Crear e instanciar el árbol de decisión.
 dt = DecisionTreeClassifier(criterion='entropy', min_samples_split=2, max_depth=5, random_state=42)
 dt.fit(X_train, y_train)
 
-# Visualizar el árbol
+# Visualizar el árbol.
 plt.figure(figsize=(10,6))
 plot_tree(dt, feature_names=encoder.get_feature_names_out().tolist(), class_names=dt.classes_.tolist(), filled=True)
 plt.savefig(f'{file_name}_tree-scikitlearn.png')
 
-# Imprimir resultados
+# Imprimir resultados.
 y_pred = dt.predict(X_test)
 
+# Se calculan las metricas.
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred, average='weighted')
 recall = recall_score(y_test, y_pred, average='weighted')
 f1 = f1_score(y_test, y_pred, average='weighted')
 conf_matrix = confusion_matrix(y_test, y_pred)
 
+# Se imprimen los resultados por consola.
 print("\n------------------------------ ARBOL SCI-KIT ------------------------------\n")
 print("Exactitud:", accuracy)
 print("Precisión:", precision)

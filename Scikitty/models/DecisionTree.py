@@ -605,7 +605,7 @@ class DecisionTree:
                         etiquetas_no_divididas)
                     impureza += probabilidad_no_valor * impureza_no_valor
                     # Se busca la mejor impuera comparando la anterior con la actual.
-                    if impureza <= mejor_impureza:
+                    if impureza < mejor_impureza:
                         mejor_impureza = impureza
                         mejor_regla = (indice, '==', valor)
         return mejor_regla, mejor_impureza

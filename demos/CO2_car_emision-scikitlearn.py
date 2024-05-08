@@ -66,8 +66,8 @@ n_nodes = dt.tree_.node_count
 depth = dt.tree_.max_depth
 
 # Ajustar el tamaño de la figura según la profundidad y el número de nodos
-fig_width = max(200, n_nodes / 2)
-fig_height = max(200, depth * 2)
+fig_width = max(70, n_nodes / 2)
+fig_height = max(30, depth * 2)
 plt.figure(figsize=(fig_width, fig_height))
 
 # Visualizar el árbol
@@ -80,9 +80,6 @@ plot_tree(
 )
 
 plt.savefig(f'{file_name}_tree-scikitlearn.png', bbox_inches='tight')
-
-# Mostrar el árbol graficado
-plt.show()
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)
@@ -103,3 +100,4 @@ print(conf_matrix)
 print("Predicted Labels:", y_pred)
 print("Actual Labels:", y_test.tolist())
 print("\nVisualizando el árbol de Sci-Kit Learn...\n")
+plt.show()
