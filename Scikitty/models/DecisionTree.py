@@ -200,7 +200,6 @@ class DecisionTree:
                 continue
 
             for valor in valores_unicos:
-                # Concepto que el profe vio ayer en clase
                 # Se crea una máscara booleana para las características con el mismo valor
                 mascara_division = caracteristica == valor
                 etiquetas_divididas = etiquetas[mascara_division]
