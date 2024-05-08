@@ -6,15 +6,30 @@
 CO2_car_emision_tree
 CO2_car_emision_tree-scikitlearn.png
 CO2_car_emision_tree.png
+CO2_car_emision_loaded_tree
+CO2_car_emision_loaded_tree.png
+CO2_car_emision.json
+
 fictional_disease_tree
 fictional_disease_tree-scikitlearn.png
 fictional_disease_tree.png
+fictional_disease_loaded_tree
+fictional_disease_loaded_tree.png
+fictional_disease.json
+
 fictional_reading_place_tree
 fictional_reading_place_tree-scikitlearn.png
 fictional_reading_place_tree.png
+fictional_reading_place_loaded_tree
+fictional_reading_place_loaded_tree.png
+fictional_reading_place.json
+
 playTennis_tree
 playTennis_tree-scikitlearn.png
 playTennis_tree.png
+playTennis_loaded_tree
+playTennis_loaded_tree.png
+playTennis.json
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

@@ -85,7 +85,6 @@ class TreePersistence:
             nodo = Nodo(
                 es_hoja=nodo_dict['es_hoja'],
                 regla=nodo_dict.get('regla'),
-                etiqueta=nodo_dict.get('etiqueta'),
                 impureza=nodo_dict['impureza'],
                 etiquetas=np.array(nodo_dict['etiquetas'])
             )

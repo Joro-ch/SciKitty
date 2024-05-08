@@ -26,9 +26,48 @@ import numpy as np
 import pandas as pd
 
 class Nodo:
+    """
+        Clase que conforma un nodo de un árbol de decisión, almacenando información como
+        la regla utilizada para comparar y separar los datos de un split, la etiqueta o valor
+        que más se repite en el split, la impureza de los datos, y el listado de etiquetas o
+        el "y_train" con el split del nodo actual. 
+
+        Atributos
+        ---------
+        es_hoja: atributo que indica si el nodo es una hoja o no. Parametro que sirve para
+        tratar de forma diferente los nodos en diferentes funciones de graficación.
+
+        regla: atributo que almacena la regla utilizada para partir los datos del nodo actual.
+        Se almacena una tupla en él con la regla a utilizar, por ejemplo: para la regla 
+        "Numero1 <= Numero2", la tupla sería (Numero1, <=, Numero2). 
+
+        etiquetas: atibuto que almacena los datos del split actual en el nodo. Se almacenan los
+        datos que quedaron como resultado del split anterior. 
+
+        impureza: atributo que almacena la impureza de los datos guardados en el atributo etiquetas.
+        El tipo o críterio con el que se calcula este valor dependerá del críterio que el árbol de
+        decisión tenga seleccionado.
+
+        etiqueta: atributo que almacena la etiqueta más común de los datos almacenados en etiquetas.
+
+        muestras: atibuto que almacena la cantidad de muestras con las que se va a trabajar el split
+        actual. Este valor se calcula en base al atributo "etiquetas".
+
+        izquierda: atributo que contiene el subárbol izquierdo del nodo actual.
+
+        derecha: atributo que contiene el subárbol derecho del nodo actual.
+
+        Ejemplos
+        --------
+        >>> from Scikitty.models.DecisionTree import Nodo
+        >>> ...
+        >>> nodo = Nodo(es_hoja=True, regla=None, impureza=nodo_impureza, etiquetas=etiquetas)
+        >>> ...
+    """
+
 
     # Función de construción de la clase Nodo.
-    def __init__(self, es_hoja=False, regla=None, etiqueta=None, impureza=0, etiquetas=np.array([])):
+    def __init__(self, es_hoja=False, regla=None, etiquetas=np.array([]), impureza=0):
         """
             Inicializa un nodo del árbol de decisión, cada nodo tiene su regla de división además
             de un atributo que indica si es un nodo final (hoja). Nuestro algoritmo está diseñado
@@ -44,23 +83,23 @@ class Nodo:
         # Atributo que almacena la regla que el nodo realiza para hacer el split.
         self.regla = regla
 
-        # Atributo que almacena la etiqueta más común del split.
-        self.etiqueta = etiqueta
-
-        # Atributo que almacena el subárbol izquierdo del nodo.
-        self.izquierda = None
-
-        # Atributo que almacena el subárbol derecho del nodo.
-        self.derecha = None
-
         # Atributo que almacena la impureza del split del nodo actual.
         self.impureza = impureza
 
         # Atributo que alamacena las etiquetas que componen el split.
         self.etiquetas = etiquetas
 
+        # Atributo que almacena la etiqueta más común del split.
+        self.etiqueta = self._etiqueta_mas_comun(etiquetas)
+
         # Atributo que representa la cantidad de muestras que hay total en el split actual.
         self.muestras = etiquetas.size
+
+        # Atributo que almacena el subárbol izquierdo del nodo.
+        self.izquierda = None
+
+        # Atributo que almacena el subárbol derecho del nodo.
+        self.derecha = None
 
 
     # Función de impresión de la clase nodo.
@@ -70,21 +109,91 @@ class Nodo:
             y en caso de ser hoja, se muestra la etiqueta (nombre del target).
         """
         return f"Hoja: {self.etiqueta}" if self.es_hoja else f"Regla: {self.regla}"
+    
+
+    # Función que encuentra la etiqueta más comun del atributo numpy array "etiquetas" del nodo. 
+    def _etiqueta_mas_comun(self, etiquetas):
+        """
+            Devuelve la etiqueta más común en un conjunto de etiquetas.
+
+            Parametros
+            ----------
+
+            etiquetas: parametro que contiene el atributo numpy array "etiquetas" del nodo. 
+            Puede utilizar otro numpy array arbitrario que se le pase por parametro.
+
+            Ejemplos
+            --------
+            >>> from Scikitty.models.DecisionTree import Nodo
+            >>> ...
+            >>> nodo = Nodo(es_hoja=True, regla=None, impureza=nodo_impureza, etiquetas=etiquetas)
+            >>> nodo._etiqueta_mas_comun(etiquetas=etiquetas)
+        """
+
+        # Se crea un array que contiene la cantidad de conteos de cada etiqueta.
+        valores, conteos = np.unique(etiquetas, return_counts=True)
+
+        # Se obtiene el valor máximo del array.
+        return valores[np.argmax(conteos)]
 
 
 class DecisionTree:
+    """
+        Definición del algoritmo de aprendizaje automático "Árbol de Decisión". La idea es construir un árbol donde 
+        los nodos son preguntas o reglas sobre alguna característica del conjunto de datos (DS), dichas reglas,
+        dividirán al DS en subconjuntos más pequeños según las preguntas o reglas que mejor dividan al DS.
+
+        Nuestro árbol funciona escogiendo las características que generen los subconjuntos con menor impureza respecto a
+        las etiquetas a predict, utilizando criterios como "gini" o "entropy" si los datos son multiclase o binarios
+        y MSE si los datos son contínuos y requieren de técnicas de regresión.
+
+        Atributos
+        ---------
+        caracteristicas: atributo del árbol que almacena el "x_train" del modelo. Utilizado en diferentes funciones
+        para calcular parametros como la impureza de los datos o la mejor pregunta que se puede realizar en un split.
+
+        etiquetas: atributo del árbol que almacena el "y_train" del modelo. Al igual que el atributo "caracteristicas"
+        es utilizado en diferentes funciones para calcular parametros como la impureza o mejor pregunta.
+
+        criterio: atributo que indica cual es le críterio que utilizará el árbol para calcular la impureza de los datos
+        de un split dado.
+
+        min_muestras_div: hiperparametro del árbol que indica el minimo de muestras por split en cada nodo del árbol.
+
+        max_profundidad: hiperparametro del árbol que indica el máximo de profundidad al cual el árbol se puede generar.
+
+        raiz: atributo que almacena el nodo raiz del árbol.
+
+        etiquetas_originales: atributo que almacena las etiquetas unicas del "y_train" del árbol. Utilizado para comprobar
+        si se trata de un split izquierdo o derecho a la hora de graficar los "valores" de cada nodo.
+
+        Ejemplos
+        --------
+        >>> from Scikitty.models.DecisionTree import DecisionTree
+        >>> from Scikitty.model_selection.train_test_split import train_test_split
+        >>> import pandas as pd
+        
+        >>> # Se almacena el nombre del archivo donde se guarda el dataset.
+        >>> file_name = 'fictional_disease'
+
+        >>> # Se cargan los datos.
+        >>> data = pd.read_csv(f'../datasets/{file_name}.csv')
+
+        >>> # Se preparan los datos.
+        >>> features = data.drop('Disease', axis=1)
+        >>> labels = data['Disease']
+
+        >>> # Se dividen los datos.
+        >>> X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+
+        >>> # Se crea e instancia el árbol de decisión.
+        >>> dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
+    """
+
 
     # Función de construcción de la clase DecisionTree.
     def __init__(self, caracteristicas, etiquetas, criterio='entropy', min_muestras_div=2, max_profundidad=None):
         """
-            Definición del algoritmo de aprendizaje automático "Árbol de Decisión". La idea es construir un árbol donde 
-            los nodos son preguntas o reglas sobre alguna característica del conjunto de datos (DS), dichas reglas,
-            dividirán al DS en subconjuntos más pequeños según las preguntas o reglas que mejor dividan al DS.
-
-            Nuestro árbol funciona escogiendo las características que generen los subconjuntos con menor impureza respecto a
-            las etiquetas a predict, utilizando criterios como "gini" o "entropy" si los datos son multiclase o binarios
-            y MSE si los datos son contínuos y requieren de técnicas de regresión.
-
             El árbol recibirá una lista de características que dividirá en los nombres de dichas características y sus
             valores, además de las etiquetas correctas a predict en estructuras de numpy.
 
@@ -126,8 +235,48 @@ class DecisionTree:
 
 
     def get_tree(self, nodo=None):
+        """
+            Función que retorna un diccionario con los datos completos del árbol actual. Se van
+            obteniendo los datos de cada nodo del árbol de forma recursiva.
+
+            Parametros
+            ---------- 
+
+            nodo: se obtiene un nodo con toda su información. Se extrae de dicho nodo, todos sus
+            datos para almacenarlos en un diccionario que creará toda la estructura del árbol.
+
+            Ejemplos
+            -------- 
+            >>> from Scikitty.models.DecisionTree import DecisionTree
+            >>> from Scikitty.model_selection.train_test_split import train_test_split
+            >>> import pandas as pd
+
+            >>> # Se almacena el nombre del archivo donde se guarda el dataset.
+            >>> file_name = 'CO2_car_emision'
+
+            >>> # Se cargan los datos.
+            >>> data = pd.read_csv(f'../datasets/{file_name}.csv')
+
+            >>> # Se preparan los datos.
+            >>> features = data.drop('CO2', axis=1)
+            >>> labels = data['CO2']
+
+            >>> # Se dividen los datos.
+            >>> X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+
+            >>> # Se crea e instancia el árbol de decisión.
+            >>> dt = DecisionTree(X_train, y_train, criterio='Entropy', min_muestras_div=2, max_profundidad=5)
+            >>> dt.fit()
+
+            >>> # Se visualiza el árbol.
+            >>> tree_structure = dt.get_tree_structure()
+        """
+
+        # Se comprueba si el nodo es igual para None. Dado el caso se iguala a la raiz del árbol.
         if nodo is None:
             nodo = self.raiz
+
+        # Se crea un diccionario con todos lo datos del nodo.
         nodo_dict = {
             'es_hoja': nodo.es_hoja,
             'regla': nodo.regla,
@@ -136,12 +285,57 @@ class DecisionTree:
             'etiquetas': nodo.etiquetas.tolist(),
             'muestras': nodo.muestras
         }
+
+        # Se comprueba si el nodo no es de tipo hoja para añadirle al diccionario sus subárboles.
         if not nodo.es_hoja:
             nodo_dict['izquierda'] = self.get_tree(nodo.izquierda)
             nodo_dict['derecha'] = self.get_tree(nodo.derecha)
+        
         return nodo_dict
 
+
     def set_tree(self, root_node):
+        """
+            Función que setea la raiz del árbol en base a un nodo pasado por parametro.
+
+            Parametros
+            ----------
+
+            root_node: nodo raiz pasado por parametro el cual se quiere establecer como la raiz
+            del árbol de decisión actual.
+
+            Ejemplos
+            -------- 
+
+            >>> from Scikitty.models.DecisionTree import DecisionTree
+            >>> from Scikitty.model_selection.train_test_split import train_test_split
+            >>> import pandas as pd
+
+            >>> # Se almacena el nombre del archivo donde se guarda el dataset
+            >>> file_name = 'playTennis'
+
+            >>> # Se cargan los datos.
+            >>> data = pd.read_csv(f'../datasets/{file_name}.csv')
+
+            >>> # Se preparan los datos.
+            >>> features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
+            >>> labels = data['Play Tennis']
+
+            >>> # Se dividen los datos.
+            >>> X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+
+            >>> # Se crea e instancia el árbol de decisión.
+            >>> dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+            >>> dt.fit()
+
+            >>> # Se guarda el árbol en un archivo JSON.
+            >>> TreePersistence.save_tree(dt, 'playTennis.json')
+
+            >>> # Se carga el árbol desde el archivo JSON.
+            >>> nueva_raiz = TreePersistence.load_tree('playTennis.json')
+            >>> nuevo_dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+            >>> nuevo_dt.set_tree(nueva_raiz)
+        """
         self.raiz = root_node
         
 
@@ -152,6 +346,14 @@ class DecisionTree:
             a la clase mayoritaria, del target o etiquetas a predecir, es mayor o igual al umbral
             establecido por el usuario. Devuelve true o false según el dataset esté balanceado o
             no.
+
+            Parametros
+            ----------
+            umbral: parametro que indica el umbral de balance entre los datos del dataset.
+
+            Ejemplos
+            --------
+            
         """
 
         # Se obtiene la cantidad total de cada elemento diferente del y_train.
@@ -187,23 +389,20 @@ class DecisionTree:
             etiqueta (la etiqueta más común que posea).
         """
 
-        # Se obtiene la etiqueta que es más común para el split actual.
-        nodo_etiqueta = self._etiqueta_mas_comun(etiquetas)
-
         # Se obtiene la impureza del split actual.
         nodo_impureza = self._calcular_impureza(etiquetas)
 
         # Caso base para la recursividad.
         # Valida los hiperparámetros: profundidad y la cantidad de la muestra.
         if self._detener_division(etiquetas, caracteristicas.shape[0], profundidad_actual):
-            return Nodo(es_hoja=True, etiqueta=nodo_etiqueta, impureza=nodo_impureza, etiquetas=etiquetas)
+            return Nodo(es_hoja=True, impureza=nodo_impureza, etiquetas=etiquetas)
         
         # Se obtiene la característica con la mejor pureza.
         mejor_regla, _ = self._elegir_mejor_regla(caracteristicas, etiquetas)
 
         # Se comprueba si no exite la mejor regla para poder crear el nodo si es el caso.
         if not mejor_regla:
-            return Nodo(es_hoja=True, etiqueta=nodo_etiqueta, impureza=nodo_impureza, etiquetas=etiquetas)
+            return Nodo(es_hoja=True, impureza=nodo_impureza, etiquetas=etiquetas)
         
         # Se inicializan dos variables que almacenaran los indicies de cada lado del split.
         indices_izquierda = indices_derecha = 0
@@ -222,14 +421,14 @@ class DecisionTree:
             caracteristicas[indices_derecha], etiquetas[indices_derecha], profundidad_actual + 1)
         
         # Al nodo raíz se le asigna la mejor característica según su impureza.
-        nodo = Nodo(etiqueta=nodo_etiqueta, regla=mejor_regla, impureza=nodo_impureza, etiquetas=etiquetas)
+        nodo = Nodo(regla=mejor_regla, impureza=nodo_impureza, etiquetas=etiquetas)
 
         # Se le agrega el subárbol izquierdo.
         nodo.izquierda = subarbol_izquierdo
 
         # Se le agrega el subárbol derecho.
         nodo.derecha = subarbol_derecho
-        
+
         return nodo
 
 
@@ -248,18 +447,6 @@ class DecisionTree:
             return True
         
         return False
-
-
-    def _etiqueta_mas_comun(self, etiquetas):
-        """
-            Devuelve la etiqueta más común en un conjunto de etiquetas.
-        """
-
-        # Se crea un array que contiene la cantidad de conteos de cada etiqueta.
-        valores, conteos = np.unique(etiquetas, return_counts=True)
-
-        # Se obtiene el valor máximo del array.
-        return valores[np.argmax(conteos)]
 
 
     def _elegir_mejor_regla(self, caracteristicas, etiquetas):
