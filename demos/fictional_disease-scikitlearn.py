@@ -1,3 +1,38 @@
+# --------------------------------------------------------------------------------- #
+"""
+    Autores:
+    1) Nombre: John Rojas Chinchilla
+       ID: 118870938
+       Correo: john.rojas.chinchilla@est.una.ac.cr
+       Horario: 1pm
+
+    2) Nombre: Abigail Salas
+       ID: 402570890
+       Correo: abigail.salas.ramirez@est.una.ac.cr
+       Horario: 1pm
+
+    3) Nombre: Axel Monge Ramirez
+       ID: 118640655
+       Correo: axel.monge.ramirez@est.una.ac.cr
+       Horario: 1pm
+
+    4) Nombre: Andrel Ramirez Solis
+       ID: 118460426
+       Correo: andrel.ramirez.solis@est.una.ac.cr
+       Horario: 1pm
+"""
+# --------------------------------------------------------------------------------- #
+"""
+    Este script demuestra el uso de varias funcionalidades en el módulo scikit-learn:
+    - Cargar un dataset.
+    - Codificar variables categóricas.
+    - Preparar y dividir los datos en conjuntos de entrenamiento y prueba.
+    - Entrenar un modelo de árbol de decisión.
+    - Visualizar el árbol de decisión.
+    - Evaluar el modelo utilizando varias métricas.
+"""
+# --------------------------------------------------------------------------------- #
+
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.model_selection import train_test_split
