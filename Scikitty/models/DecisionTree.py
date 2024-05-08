@@ -996,6 +996,10 @@ class DecisionTree:
               criterio_a_mostrar = f"MSE: {round(nodo.impureza, 3)}"
         else:
                 criterio_a_mostrar = f"{self.criterio}:{round(nodo.impureza, 3)}"
+                
+        # Se comprueba la cantidad de valores para graficar diferente los values de cada nodo.
+        valor = f"[{', '.join(str(cuenta[np.where(etiquetasUnicas == etiqueta)[0][0]]) if etiqueta in etiquetasUnicas else '0' for etiqueta in self.etiquetas_originales)}]"
+       
         # Si es una hoja retorna la siguiente información.
         if nodo.es_hoja:
 
@@ -1005,17 +1009,6 @@ class DecisionTree:
             # Se comprueba que sea mayor a "-0.0" para establecer el valor en 0 si no es el caso.
             if numeroImpureza <= -0.0:
                 numeroImpureza = 0
-            
-            # Se comprueba la cantidad de valores para graficar diferente los values de cada nodo.
-            valor = ""
-            if self.etiquetas_originales[0] == etiquetasUnicas[0] and cuenta.size == 1:
-                valor = f"[{cuenta[0]}, 0]"
-            elif self.etiquetas_originales[0] != etiquetasUnicas[0] and cuenta.size == 1:
-                valor = f"[0, {cuenta[0]}]"
-            elif self.etiquetas_originales[0] == etiquetasUnicas[0] and cuenta.size == 2:
-                valor = f"[{cuenta[0]}, {cuenta[1]}]"
-            else:
-                valor = f"[{cuenta[1]}, {cuenta[0]}]"
 
             # Guarda la información relevante del nodo.
             return {
@@ -1037,6 +1030,6 @@ class DecisionTree:
                 "derecha": self.get_tree_structure(nodo.derecha), # Obtiene la estructua derecha
                 "criterio": criterio_a_mostrar,
                 "muestras": f"muestras: {nodo.muestras}",
-                "valor": f"valor: [{cuenta[0]}, {cuenta[1]}]",
+                "valor": f"valor: {valor}",
                 "clase": f"clase: {nodo.etiqueta}",
             }
