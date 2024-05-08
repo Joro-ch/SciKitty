@@ -69,7 +69,8 @@ file_name = 'fictional_reading_place'
 data = pd.read_csv(f'../datasets/{file_name}.csv')
 
 # Preparar los datos
-features = data.drop('user_action', axis=1)  # Características del dataset
+features = data.drop('example', axis=1) # Eliminar la columna 'example' que es solo un indicador de instancias
+features = features.drop('user_action', axis=1)  # Características del dataset
 labels = data['user_action']  # Etiquetas del dataset
 
 # Dividir los datos en conjuntos de entrenamiento y prueba

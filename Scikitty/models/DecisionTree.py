@@ -975,7 +975,19 @@ class DecisionTree:
         """
         if nodo is None:
             nodo = self.raiz
+            
+        # Se obtienen los valores unicos de las etiquetas con sus cantidades.
+        etiquetasUnicas, cuenta = np.unique(nodo.etiquetas, return_counts=True)
+        
+        # Determina si las etiquetas son continuas.
+        es_continua = not (len(self.etiquetas_originales) <= 2 or isinstance(self.etiquetas_originales[0], str))
 
+        # Muestra MSE si el atributo es continuo y el criterio especificado por el usuario en la creación de DT si
+        # el atributo es binario o categórico multiclase.
+        if es_continua: 
+              criterio_a_mostrar = f"MSE: {round(nodo.impureza, 3)}"
+        else:
+                criterio_a_mostrar = f"{self.criterio}:{round(nodo.impureza, 3)}"
         # Si es una hoja retorna la siguiente información.
         if nodo.es_hoja:
 
@@ -985,9 +997,6 @@ class DecisionTree:
             # Se comprueba que sea mayor a "-0.0" para establecer el valor en 0 si no es el caso.
             if numeroImpureza <= -0.0:
                 numeroImpureza = 0
-            
-            # Se obtienen los valores unicos de las etiquetas con sus cantidades.
-            etiquetasUnicas, cuenta = np.unique(nodo.etiquetas, return_counts=True)
             
             # Se comprueba la cantidad de valores para graficar diferente los values de cada nodo.
             valor = ""
@@ -1003,14 +1012,13 @@ class DecisionTree:
             # Guarda la información relevante del nodo.
             return {
                 "tipo": "Hoja", 
-                "criterio": f"{self.criterio}:{numeroImpureza}",
+                "criterio": criterio_a_mostrar,
                 "muestras": f"muestras: {nodo.muestras}",
                 "valor": f"valor: {valor}",
                 "clase": f"clase: {nodo.etiqueta}"
             }
         else:
             nombre_columna = self.nombres_caracteristicas[nodo.regla[0]]
-            etiquetasUnicas, cuenta = np.unique(nodo.etiquetas, return_counts=True)
 
             # Devuelve la información relevante del nodo
             return {
@@ -1019,7 +1027,7 @@ class DecisionTree:
                 "regla": f"{nodo.regla[0]} {nodo.regla[1]} {nodo.regla[2]}",
                 "izquierda": self.get_tree_structure(nodo.izquierda), # Obtiene la estructura izquierda
                 "derecha": self.get_tree_structure(nodo.derecha), # Obtiene la estructua derecha
-                "criterio": f"{self.criterio}:{round(nodo.impureza, 3)}",
+                "criterio": criterio_a_mostrar,
                 "muestras": f"muestras: {nodo.muestras}",
                 "valor": f"valor: [{cuenta[0]}, {cuenta[1]}]",
                 "clase": f"clase: {nodo.etiqueta}",

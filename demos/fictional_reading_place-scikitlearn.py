@@ -48,10 +48,14 @@ file_name = 'fictional_reading_place'
 # Cargar los datos
 data = pd.read_csv(f'../datasets/{file_name}.csv')
 
+# Preparar los datos.
+features = data.drop('example', axis=1) # Eliminar la columna 'example' que es solo un indicador de instancias
+features = features.drop('user_action', axis=1)  # Características del dataset
+labels = data['user_action']
+
 # Codificar características categóricas
 encoder = OneHotEncoder()
-features_encoded = encoder.fit_transform(data.drop('user_action', axis=1)).toarray()
-labels = data['user_action']
+features_encoded = encoder.fit_transform(features).toarray()
 
 # Dividir los datos
 X_train, X_test, y_train, y_test = train_test_split(features_encoded, labels, test_size=0.2, random_state=42)
