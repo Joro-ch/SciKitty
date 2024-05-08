@@ -198,27 +198,28 @@ class DecisionTree:
                 caracteristica[0], str) and len(valores_unicos) > 2
             
             if not (es_binaria or es_categorica):
-                    mascara_division = caracteristica <= np.median(caracteristica)
-                    
+                # Ordena los valores únicos y calcula los puntos medios posibles para realizar splits
+                valores_ordenados = np.sort(valores_unicos)
+                puntos_medios = (valores_ordenados[:-1] + valores_ordenados[1:]) / 2
+                
+                for punto in puntos_medios:
+                    mascara_division = caracteristica <= punto
                     etiquetas_divididas = etiquetas[mascara_division]
                     probabilidad_valor = len(etiquetas_divididas) / n_muestras
-                    impureza_valor = self._calcular_impureza(
-                        etiquetas_divididas)
+                    impureza_valor = self._calcular_impureza(etiquetas_divididas)
                     impureza = probabilidad_valor * impureza_valor
-                    # Crea una máscara booleana para las caracteríticas con diferente valor
-                    mascara_no_division = caracteristica > np.median(caracteristica)
+
+                    mascara_no_division = caracteristica > punto
                     etiquetas_no_divididas = etiquetas[mascara_no_division]
-                    probabilidad_no_valor = len(
-                        etiquetas_no_divididas) / n_muestras
-                    impureza_no_valor = self._calcular_impureza(
-                        etiquetas_no_divididas)
+                    probabilidad_no_valor = len(etiquetas_no_divididas) / n_muestras
+                    impureza_no_valor = self._calcular_impureza(etiquetas_no_divididas)
                     impureza += probabilidad_no_valor * impureza_no_valor
-                    # Se busca la mejor impuera comparando la anterior con la actual
-                    if impureza < mejor_impureza:
+
+                    if impureza <= mejor_impureza:
                         mejor_impureza = impureza
-                        mejor_regla = (indice, '<=', np.median(caracteristica))
+                        mejor_regla = (indice, '<=', punto)
             else:
-                # Si es una característica continua: continue
+                # Si la característica no es binaria, se evalúa cada valor único de la característica
                 for valor in valores_unicos:
                     # Concepto que el profe vio ayer en clase
                     # Se crea una máscara booleana para las características con el mismo valor
@@ -238,7 +239,7 @@ class DecisionTree:
                         etiquetas_no_divididas)
                     impureza += probabilidad_no_valor * impureza_no_valor
                     # Se busca la mejor impuera comparando la anterior con la actual
-                    if impureza < mejor_impureza:
+                    if impureza <= mejor_impureza:
                         mejor_impureza = impureza
                         mejor_regla = (indice, '==', valor)
         return mejor_regla, mejor_impureza
@@ -333,13 +334,16 @@ class DecisionTree:
 
     def _seguir_regla(self, caracteristica, regla):
         """
-            Devuelve el booleano que indica si cumple o no la regla dependiendo si la regla es == o !=.
+            Devuelve el booleano que indica si cumple o no la regla dependiendo si la regla es <= o ==.
         """
         indice_columna, condicion, valor = regla
         # Comprueba si la característica cumple con la regla a seguir
-        return caracteristica[indice_columna] == valor if condicion == '==' else caracteristica[indice_columna] != valor
-        
-
+        if condicion == '==':
+            return caracteristica[indice_columna] == valor
+        elif condicion == '<=':
+            return caracteristica[indice_columna] <= valor
+        else:
+            return caracteristica[indice_columna] > valor
 
     def imprimir_arbol(self, nodo=None, profundidad=0, condicion="Raíz"):
         """
