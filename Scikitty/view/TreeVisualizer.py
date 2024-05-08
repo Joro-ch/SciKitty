@@ -13,10 +13,10 @@ class TreeVisualizer:
         """
         if estructura_arbol['tipo'] == 'Hoja':
             nombre_nodo = f"hoja_{id(estructura_arbol)}"
-            color = 'lightgreen'
+            color = '#ffa500'  # Un naranja brillante y llamativo
         else:
             nombre_nodo = f"decision_{id(estructura_arbol)}"
-            color = 'lightblue'
+            color = '#5a9ad5'  # Un azul cielo claro
             self.graph_tree(estructura_arbol['izquierda'], 
                             padre=nombre_nodo, 
                             etiqueta_arista='True', 
@@ -38,16 +38,10 @@ class TreeVisualizer:
             Crea una etiqueta formateada con los detalles del nodo centrados y en líneas separadas.
             Divide el texto de 'regla' en líneas individuales y las muestra como etiquetas del nodo.
         """
-        # Extrae la cadena de regla y divide en líneas separadas.
         regla_completa = nodo.get('regla', "")
         lineas_regla = regla_completa.strip().split('\n')
-        
-        # Formatea cada línea para asegurarse de que no haya espacios extraños ni líneas vacías.
         lineas_limpas = [linea.strip() for linea in lineas_regla if linea.strip()]
-        
-        # Junta todas las líneas limpias en una única cadena, separando cada una por un salto de línea.
         etiqueta_nodo = "\n".join(lineas_limpas)
-        
         return etiqueta_nodo
 
     def get_graph(self, nombre_archivo='arbol', ver=True):
@@ -55,5 +49,3 @@ class TreeVisualizer:
             Renderiza el grafo como un archivo de imagen y muestra el grafo.
         """
         self.grafo.render(nombre_archivo, view=ver)
-
-# Crear y utilizar el visualizador sería igual que antes, proporcionando la estructura correcta del árbol.
