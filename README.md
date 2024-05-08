@@ -8,7 +8,7 @@ Este proyecto se deberá de correr desde el prompt Anaconda, en donde se deberá
 ```
 pip install numpy
 pip install pandas
-pip install graphviz
+conda install graphviz
 ```
 ### 3) Dataset
 
@@ -38,8 +38,7 @@ python fictional_reading_place.py
 ```
 python playTennis.py
 ```
-En el caso de poder compararlo con las salidas de la librería de Scikit Learn, puede ejecutar los siguientes scripts,
-para comparar los resultados de las dos librerias:
+En el caso de poder compararlo con las salidas de la librería de Scikit Learn, puede ejecutar los siguientes scripts, para comparar los resultados de las dos librerias:
 
 * Para poder ejecutar el resultado de scikitlearn del dataset fictional_disease.csv: 
 ```

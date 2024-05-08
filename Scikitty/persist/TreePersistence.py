@@ -36,7 +36,7 @@ class TreePersistence:
             # Suponiendo que 'rule' está almacenada como una cadena 'index == value'
             index, operation, value = structure['rule'].split()
             rule = (int(index), operation, value)  # Convierte la cadena en una tupla de regla
-            nodo = nodo(is_leaf=False, rule=rule)  # Crea un nodo de decisión con la regla
+            nodo = Nodo(is_leaf=False, rule=rule)  # Crea un nodo de decisión con la regla
             # Reconstruye recursivamente los subárboles izquierdo y derecho
             nodo.left = self._rebuild_tree(structure['left'])
             nodo.right = self._rebuild_tree(structure['right'])

@@ -60,6 +60,11 @@ class DecisionTree:
         self.raiz = None
         self.etiquetas_originales = np.unique(etiquetas)
 
+    @classmethod
+    def generar_arbol (self, raiz):
+        self.raiz = raiz
+        
+
     def is_balanced(self, umbral=0.5):
         """
             Evalúa si el dataset está balanceado basándose en un umbral de balance.
