@@ -1,3 +1,23 @@
+# --------------------------------------------------------------------------------- #
+"""
+    Lo siguiente es solo necesario para que Python reconozca el directorio Scikitty
+    el cual está en un nivel superior a este archivo. Esto se hace solo porque los
+    scripts están almacenados dentro de una carpeta "demos" en un nivel más profundo
+    que la carpeta Scikitty.
+"""
+
+import sys
+import os
+
+# Obtener el directorio actual del script.
+directorio_actual = os.path.dirname(os.path.abspath(__file__))
+# Obtener el directorio superior.
+directorio_superior = os.path.abspath(os.path.join(directorio_actual, os.pardir))
+# Se agrega el directorio superior a los paths que reconoce este archivo python.
+sys.path.append(directorio_superior)
+
+# --------------------------------------------------------------------------------- #
+
 from Scikitty.models.DecisionTree import DecisionTree
 from Scikitty.view.TreeVisualizer import TreeVisualizer
 from Scikitty.metrics.accuracy_score import puntuacion_de_exactitud
@@ -9,14 +29,14 @@ from Scikitty.model_selection.train_test_split import train_test_split
 import pandas as pd
 
 # Se almacena el nombre del archivo donde se guarda el dataset
-file_name = 'fictional_reading_place'
+file_name = 'fictional_disease'
 
 # Cargar los datos
-data = pd.read_csv(f'datasets/{file_name}.csv')
+data = pd.read_csv(f'../datasets/{file_name}.csv')
 
 # Preparar los datos
-features = data.drop('user_action', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
-labels = data['user_action']
+features = data.drop('Disease', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
+labels = data['Disease']
 
 # Dividir los datos
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
@@ -29,7 +49,7 @@ dt.fit()
 tree_structure = dt.get_tree_structure()
 visualizer = TreeVisualizer()
 visualizer.graph_tree(tree_structure)
-visualizer.get_graph(f'{file_name}_tree') # Esto generará el archivo 'tree_output.png' en el directorio actual
+visualizer.get_graph(f'{file_name}_tree')  # Esto generará el archivo 'tree_output.png' en el directorio actual
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)
