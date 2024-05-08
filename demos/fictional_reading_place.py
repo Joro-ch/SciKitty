@@ -22,7 +22,7 @@
        Horario: 1pm
 """
 # --------------------------------------------------------------------------------- #
-# --------------------------------------------------------------------------------- #
+#-----------------------SCRIPT fictional_reading_place SCIKITTY----------------------------#
 """
     Este script demuestra el uso de un modelo de árbol de decisión para predecir las acciones del usuario
     en un contexto de lectura utilizando el módulo Scikitty.
