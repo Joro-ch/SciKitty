@@ -515,39 +515,75 @@ class DecisionTree:
         return False
 
 
+    def _calcular_impureza_y_probabilidad(self, etiquetas, mascara):
+        """
+            Calcula la impureza y la probabilidad de una división dado un conjunto de etiquetas y una máscara.
+
+            Parameters
+            ----------
+            etiquetas : numpy array
+                Etiquetas del conjunto de datos.
+            mascara : numpy array
+                Máscara booleana para dividir el conjunto de etiquetas.
+
+            Returns
+            -------
+            impureza : float
+                Impureza de la división.
+            probabilidad : float
+                Probabilidad de la división.
+        """
+        etiquetas_divididas = etiquetas[mascara]
+        probabilidad = len(etiquetas_divididas) / len(etiquetas)
+        impureza = self._calcular_impureza(etiquetas_divididas)
+        return impureza, probabilidad
+
+    def _calcular_impureza_division(self, etiquetas, mascara_division):
+        """
+            Calcula la impureza de una división dado un conjunto de etiquetas, una característica y una máscara de división.
+
+            Parameters
+            ----------
+            etiquetas : numpy array
+                Etiquetas del conjunto de datos.
+            caracteristica : numpy array
+                Característica del conjunto de datos.
+            mascara_division : numpy array
+                Máscara booleana para dividir el conjunto de datos.
+
+            Returns
+            -------
+            impureza : float
+                Impureza de la división.
+        """
+        impureza_valor, probabilidad_valor = self._calcular_impureza_y_probabilidad(
+            etiquetas, mascara_division)
+        impureza_no_valor, probabilidad_no_valor = self._calcular_impureza_y_probabilidad(
+            etiquetas, ~mascara_division)
+        impureza = probabilidad_valor * impureza_valor + \
+            probabilidad_no_valor * impureza_no_valor
+        return impureza
+
     def _elegir_mejor_regla(self, caracteristicas, etiquetas):
         """
-            Encuentra la regla que genera la menor impureza respecto a las etiquetas a predict, usa el criterio
-            escogido por el usuario (de momento el criterio es solo "gini" o "entropy") De momento no toma en cuenta
-            el feature si este es continuo.
+            Encuentra la regla que genera la menor impureza respecto a las etiquetas a predecir.
 
-            Se evalúa cada valor único de la característica y se busca el que produzca la menor impureza respecto a 
-            las etiquetas, tomando en cuenta si la característica presenta ese valor o no. Se utiliza un promedio ponderado
-            con el cálculo de la impureza, eso consiste en calcular las probabilidades de que la característica presente ese valor único y 
-            de que no lo presente, y multiplicar por la impureza que utiliza como probabilidades las de cada etiqueta respecto
-            a si se presentan cuando el valor del atributo es el evaluado o no, respectivamente.
-
-            Parametros
+            Parameters
             ----------
+            caracteristicas : numpy array
+                Características del conjunto de datos.
+            etiquetas : numpy array
+                Etiquetas del conjunto de datos.
 
-            caracteristicas: parametro que contiene un numpy array con las caracteristicas del split actual.
-            Es el restante de X_train del split anterior utilizado para calcular la mejor pregunta.
-
-            etiquetas: parametro que contiene un numpy array con las etiquetas del split actual.
-            Es el restante de Y_train del split anterior utilizado para calcular la mejor pregunta.
-
-            Ejemplos
-            --------
-            >>> ...
-            >>> # Elegir Mejor Regla es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
-            >>> mejor_regla, mejor_impureza = self._elegir_mejor_regla(caracteristicas, etiquetas)
-            >>> ...
+            Returns
+            -------
+            mejor_regla : tuple
+                La mejor regla de división encontrada.
+            mejor_impureza : float
+                La menor impureza encontrada.
         """
-
-        # Selecciona la mejor regla de división para un conjunto de características y etiquetas.
         mejor_impureza = float('inf')
         mejor_regla = None
-        n_muestras = len(etiquetas)
         lista_caracteristicas = caracteristicas.T
 
         for indice, caracteristica in enumerate(lista_caracteristicas):
@@ -555,61 +591,33 @@ class DecisionTree:
             # Se guardan la cantidad de cada caracterítica.
             valores_unicos = np.unique(caracteristica)
 
-            # Verifica que la característica sea binaria.
+            # Verifica si la característica es binaria o categórica.
             es_binaria = len(valores_unicos) <= 2
-
-            # Se guarda el resultado de la característica en un str.
-            # Si su longitud es mayor a 2, entonces es una palabra (variable categórica).
             es_categorica = isinstance(
                 caracteristica[0], str) and len(valores_unicos) > 2
-            
+
             if not (es_binaria or es_categorica):
-                # Ordena los valores únicos y calcula los puntos medios posibles para realizar splits.
                 valores_ordenados = np.sort(valores_unicos)
                 puntos_medios = (valores_ordenados[:-1] + valores_ordenados[1:]) / 2
-                
+
                 for punto in puntos_medios:
                     mascara_division = caracteristica <= punto
-                    etiquetas_divididas = etiquetas[mascara_division]
-                    probabilidad_valor = len(etiquetas_divididas) / n_muestras
-                    impureza_valor = self._calcular_impureza(etiquetas_divididas)
-                    impureza = probabilidad_valor * impureza_valor
-
-                    mascara_no_division = caracteristica > punto
-                    etiquetas_no_divididas = etiquetas[mascara_no_division]
-                    probabilidad_no_valor = len(etiquetas_no_divididas) / n_muestras
-                    impureza_no_valor = self._calcular_impureza(etiquetas_no_divididas)
-                    impureza += probabilidad_no_valor * impureza_no_valor
+                    impureza = self._calcular_impureza_division(
+                        etiquetas, mascara_division)
 
                     if impureza <= mejor_impureza:
                         mejor_impureza = impureza
                         mejor_regla = (indice, '<=', punto)
             else:
-                # Si la característica no es binaria, se evalúa cada valor único de la característica.
                 for valor in valores_unicos:
-                    # Concepto que el profe vio ayer en clase.
-                    # Se crea una máscara booleana para las características con el mismo valor.
                     mascara_division = caracteristica == valor
-                        
-                    etiquetas_divididas = etiquetas[mascara_division]
-                    probabilidad_valor = len(etiquetas_divididas) / n_muestras
-                    impureza_valor = self._calcular_impureza(
-                        etiquetas_divididas)
-                    impureza = probabilidad_valor * impureza_valor
-                    # Crea una máscara booleana para las caracteríticas con diferente valor.
-                    mascara_no_division = caracteristica != valor
-                    etiquetas_no_divididas = etiquetas[mascara_no_division]
-                    probabilidad_no_valor = len(
-                        etiquetas_no_divididas) / n_muestras
-                    impureza_no_valor = self._calcular_impureza(
-                        etiquetas_no_divididas)
-                    impureza += probabilidad_no_valor * impureza_no_valor
-                    # Se busca la mejor impuera comparando la anterior con la actual.
+                    impureza = self._calcular_impureza_division(
+                        etiquetas, mascara_division)
+
                     if impureza < mejor_impureza:
                         mejor_impureza = impureza
                         mejor_regla = (indice, '==', valor)
         return mejor_regla, mejor_impureza
-
 
     def _dividir(self, caracteristicas, regla):
         """
