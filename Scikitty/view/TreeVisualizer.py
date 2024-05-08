@@ -38,10 +38,20 @@ class TreeVisualizer:
             Crea una etiqueta formateada con los detalles del nodo centrados y en líneas separadas.
             Divide el texto de 'regla' en líneas individuales y las muestra como etiquetas del nodo.
         """
-        regla_completa = nodo.get('regla', "")
-        lineas_regla = regla_completa.strip().split('\n')
-        lineas_limpas = [linea.strip() for linea in lineas_regla if linea.strip()]
-        etiqueta_nodo = "\n".join(lineas_limpas)
+        tipo = nodo.get('tipo', "")
+        if tipo == 'Hoja':
+            criterio = nodo.get('criterio', "")
+            muestras = nodo.get('muestras', "")
+            valor = nodo.get('valor', "")
+            clase = nodo.get('clase', "")
+            etiqueta_nodo = f"{criterio}\n{muestras}\n{valor}\n{clase}"
+        else:
+            regla = nodo.get('reglaDescritiva', "")
+            criterio = nodo.get('criterio', "")
+            muestras = nodo.get('muestras', "")
+            valor = nodo.get('valor', "")
+            clase = nodo.get('clase', "")
+            etiqueta_nodo = f"{regla}\n{criterio}\n{muestras}\n{valor}\n{clase}"
         return etiqueta_nodo
 
     def get_graph(self, nombre_archivo='arbol', ver=True):
