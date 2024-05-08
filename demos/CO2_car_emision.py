@@ -85,11 +85,11 @@ visualizer.get_graph(f'{file_name}_tree', ver=True)
 # Imprimir resultados.
 y_pred = dt.predict(X_test)
 
-# Se calculan las metricas.
+# Se calculan las métricas.
 accuracy = puntuacion_de_exactitud(y_test, y_pred)
-precision = puntuacion_de_precision(y_test, y_pred, average='weighted')
-recall = puntuacion_de_recall(y_test, y_pred, average='weighted')
-f1 = puntuacion_de_f1(y_test, y_pred, average='weighted')
+precision = puntuacion_de_precision(y_test, y_pred, average='weighted', zero_division=0)
+recall = puntuacion_de_recall(y_test, y_pred, average='weighted', zero_division=0)
+f1 = puntuacion_de_f1(y_test, y_pred, average='weighted', zero_division=0)
 conf_matrix = matriz_de_confusion(y_test, y_pred)
 
 # Se imprimen los resultados por consola.
@@ -122,11 +122,11 @@ nuevo_visualizer.get_graph(f'{file_name}_loaded_tree', ver=True)
 # Imprimir resultados del árbol cargado.
 nuevo_y_pred = nuevo_dt.predict(X_test)
 
-# Se calculan las metricas.
+# Se calculan las métricas.
 nuevo_accuracy = puntuacion_de_exactitud(y_test, nuevo_y_pred)
-nuevo_precision = puntuacion_de_precision(y_test, nuevo_y_pred, average='weighted')
-nuevo_recall = puntuacion_de_recall(y_test, nuevo_y_pred, average='weighted')
-nuevo_f1 = puntuacion_de_f1(y_test, nuevo_y_pred, average='weighted')
+nuevo_precision = puntuacion_de_precision(y_test, nuevo_y_pred, average='weighted', zero_division=0)
+nuevo_recall = puntuacion_de_recall(y_test, nuevo_y_pred, average='weighted', zero_division=0)
+nuevo_f1 = puntuacion_de_f1(y_test, nuevo_y_pred, average='weighted', zero_division=0)
 nuevo_conf_matrix = matriz_de_confusion(y_test, nuevo_y_pred)
 
 # Se imprimen los resultados por consola.

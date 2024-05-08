@@ -24,7 +24,7 @@
 # --------------------------------------------------------------------------------- #
 from sklearn.metrics import f1_score
 
-def puntuacion_de_f1(y_test, y_pred, average='weighted'):
+def puntuacion_de_f1(y_test, y_pred, average='weighted', zero_division=0):
     """
         Calcula la puntuación F1 del modelo de un árbol de decisión en base a "y_test", "y_pred" y "average".
         Usamos la implementación de SKLearn para este cálculo.
@@ -39,9 +39,12 @@ def puntuacion_de_f1(y_test, y_pred, average='weighted'):
             - 'macro': Promedio de la puntuación F1 de cada clase, sin considerar el desequilibrio de clases.
             - 'weighted': Promedio de la puntuación F1 de cada clase, ponderado por el número de muestras en cada clase.
             - 'samples': Promedio de la puntuación F1 de cada instancia.
+        zero_division: int or float, default=0
+            Controla el comportamiento cuando se dividen 0. Si es 'warn', emitirá una advertencia y
+            retornará 0, caso contrario retornará el valor especificado.
 
         Retorna:
         float:
             Puntuación F1 del modelo según el tipo de promedio especificado.
     """
-    return f1_score(y_test, y_pred, average=average)
+    return f1_score(y_test, y_pred, average=average, zero_division=zero_division)
