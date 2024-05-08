@@ -1,72 +1,72 @@
 digraph {
-	hoja_2229575647680 [label="Entropy: 0
+	hoja_1954875345920 [label="Entropy: 0
 muestras: 3
 valor: [0, 3]
 clase: Yes" fillcolor=lightgreen shape=box style=filled]
-	decision_2229575925184 -> hoja_2229575647680 [label=True]
-	hoja_2229575996480 [label="Entropy: 0
+	decision_1954875705024 -> hoja_1954875345920 [label=True]
+	hoja_1954875710336 [label="Entropy: 0
 muestras: 1
 valor: [1, 0]
 clase: No" fillcolor=lightgreen shape=box style=filled]
-	decision_2229575994496 -> hoja_2229575996480 [label=True]
-	hoja_2229553074048 [label="Entropy: 0
+	decision_1954875708416 -> hoja_1954875710336 [label=True]
+	hoja_1954781269888 [label="Entropy: 0
 muestras: 1
 valor: [0, 1]
 clase: Yes" fillcolor=lightgreen shape=box style=filled]
-	decision_2229575994496 -> hoja_2229553074048 [label=False]
-	decision_2229575994496 [label="Wind == Strong
+	decision_1954875708416 -> hoja_1954781269888 [label=False]
+	decision_1954875708416 [label="Wind == Strong
 Entropy: 1.0
 muestras: 2
 valor: [1, 1]
 clase: No" fillcolor=lightblue shape=box style=filled]
-	decision_2229575991680 -> decision_2229575994496 [label=True]
-	hoja_2229575994240 [label="Entropy: 0
+	decision_1954875705536 -> decision_1954875708416 [label=True]
+	hoja_1954875708160 [label="Entropy: 0
 muestras: 2
 valor: [2, 0]
 clase: No" fillcolor=lightgreen shape=box style=filled]
-	decision_2229575991680 -> hoja_2229575994240 [label=False]
-	decision_2229575991680 [label="Outlook == Rain
+	decision_1954875705536 -> hoja_1954875708160 [label=False]
+	decision_1954875705536 [label="Outlook == Rain
 Entropy: 0.811
 muestras: 4
-valor: [2, 2]
+valor: [3, 1]
 clase: No" fillcolor=lightblue shape=box style=filled]
-	decision_2229575991424 -> decision_2229575991680 [label=True]
-	hoja_2229575925696 [label="Entropy: 0
+	decision_1954875705088 -> decision_1954875705536 [label=True]
+	hoja_1954875705792 [label="Entropy: 0
 muestras: 1
 valor: [1, 0]
 clase: No" fillcolor=lightgreen shape=box style=filled]
-	decision_2229575925632 -> hoja_2229575925696 [label=True]
-	hoja_2229575992832 [label="Entropy: 0
+	decision_1954875703680 -> hoja_1954875705792 [label=True]
+	hoja_1954875705280 [label="Entropy: 0
 muestras: 1
 valor: [0, 1]
 clase: Yes" fillcolor=lightgreen shape=box style=filled]
-	decision_2229575925632 -> hoja_2229575992832 [label=False]
-	decision_2229575925632 [label="Wind == Strong
+	decision_1954875703680 -> hoja_1954875705280 [label=False]
+	decision_1954875703680 [label="Wind == Strong
 Entropy: 1.0
 muestras: 2
 valor: [1, 1]
 clase: No" fillcolor=lightblue shape=box style=filled]
-	decision_2229575925440 -> decision_2229575925632 [label=True]
-	hoja_2229575991936 [label="Entropy: 0
+	decision_1954875706688 -> decision_1954875703680 [label=True]
+	hoja_1954875705152 [label="Entropy: 0
 muestras: 2
 valor: [0, 2]
 clase: Yes" fillcolor=lightgreen shape=box style=filled]
-	decision_2229575925440 -> hoja_2229575991936 [label=False]
-	decision_2229575925440 [label="Outlook == Rain
+	decision_1954875706688 -> hoja_1954875705152 [label=False]
+	decision_1954875706688 [label="Outlook == Rain
 Entropy: 0.811
 muestras: 4
-valor: [2, 2]
+valor: [1, 3]
 clase: Yes" fillcolor=lightblue shape=box style=filled]
-	decision_2229575991424 -> decision_2229575925440 [label=False]
-	decision_2229575991424 [label="Humidity == High
+	decision_1954875705088 -> decision_1954875706688 [label=False]
+	decision_1954875705088 [label="Humidity == High
 Entropy: 1.0
 muestras: 8
 valor: [4, 4]
 clase: No" fillcolor=lightblue shape=box style=filled]
-	decision_2229575925184 -> decision_2229575991424 [label=False]
-	decision_2229575925184 [label="Outlook == Overcast
+	decision_1954875705024 -> decision_1954875705088 [label=False]
+	decision_1954875705024 [label="Outlook == Overcast
 Entropy: 0.946
 muestras: 11
-valor: [3, 8]
+valor: [4, 7]
 clase: Yes" fillcolor=lightblue shape=box style=filled]
 }

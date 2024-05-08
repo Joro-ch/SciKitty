@@ -345,8 +345,6 @@ class DecisionTree:
 
             etiquetasUnicas, count = np.unique(nodo.etiquetas, return_counts=True)
 
-            print(self.etiquetas_originales)
-
             valor = ""
             if self.etiquetas_originales[0] == etiquetasUnicas[0]:
                 valor = f"[{count[0]}, 0]"
@@ -368,12 +366,14 @@ class DecisionTree:
         else:
             nombre_columna = self.nombres_caracteristicas[nodo.regla[0]]
 
+            etiquetasUnicas, count = np.unique(nodo.etiquetas, return_counts=True)
+
             # Guarda la información relevante del nodo
             info = f"""
                 {nombre_columna} {nodo.regla[1]} {nodo.regla[2]}
                 {self.criterio}: {round(nodo.impureza, 3)}
                 muestras: {nodo.muestras}
-                valor: [{nodo.izquierda.muestras}, {nodo.derecha.muestras}]
+                valor: [{count[0]}, {count[1]}]
                 clase: {self._etiqueta_mas_comun(nodo.etiquetas)}
             """
 
