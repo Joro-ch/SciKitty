@@ -22,7 +22,8 @@
        Horario: 1pm
 """
 # --------------------------------------------------------------------------------- #
-# --------------------------------------------------------------------------------- #
+#-----------------------SCRIPT CO2_car_emision SCIKITTY----------------------------#
+
 """
     Este script demuestra el uso de varias funcionalidades en el módulo Scikitty:
     - Cargar un dataset.
@@ -49,7 +50,7 @@ sys.path.append(directorio_superior)
 
 from Scikitty.models.DecisionTree import DecisionTree
 from Scikitty.view.TreeVisualizer import TreeVisualizer
-from Scikitty.persist.TreePersistence import TreePersistence
+from Scikitty.persist.TreePersistence import TreePersistence  # Importar TreePersistence
 from Scikitty.metrics.accuracy_score import puntuacion_de_exactitud
 from Scikitty.metrics.precision_score import puntuacion_de_precision
 from Scikitty.metrics.recall_score import puntuacion_de_recall
@@ -59,27 +60,27 @@ from Scikitty.model_selection.train_test_split import train_test_split
 import pandas as pd
 
 # Se almacena el nombre del archivo donde se guarda el dataset
-file_name = 'CO2_car_emision'
+file_name = 'playTennis'
 
 # Cargar los datos
 data = pd.read_csv(f'../datasets/{file_name}.csv')
 
 # Preparar los datos
-features = data.drop('CO2', axis=1)  # Asume que 'CO2' es la columna objetivo
-labels = data['CO2']
+features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
+labels = data['Play Tennis']
 
 # Dividir los datos
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el árbol de decisión
-dt = DecisionTree(X_train, y_train, criterio='Entropy', min_muestras_div=2, max_profundidad=5)
+dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
 dt.fit()
 
 # Visualizar el árbol
 tree_structure = dt.get_tree_structure()
 visualizer = TreeVisualizer()
 visualizer.graph_tree(tree_structure)
-visualizer.get_graph(f'{file_name}_tree', ver=True)  # Esto generará el archivo 'CO2_car_emision_tree.png'
+visualizer.get_graph(f'{file_name}_tree', ver=True)
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)
@@ -103,11 +104,14 @@ print("Actual Labels:", y_test.tolist())
 TreePersistence.save_tree(dt, f'{file_name}.json')
 
 # Cargar el árbol desde el archivo JSON
-loaded_dt = TreePersistence.load_tree(f'{file_name}.json')
-print("Visualizando el árbol cargado desde el archivo JSON...")
+loaded_dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+loaded_dt.load_tree(f'{file_name}.json')  # Cargar el árbol desde el archivo JSON
+
+# Visualizar el árbol cargado
 loaded_tree_structure = loaded_dt.get_tree_structure()
 loaded_visualizer = TreeVisualizer()
 loaded_visualizer.graph_tree(loaded_tree_structure)
+print("Visualizando el árbol cargado desde el archivo JSON...")
 loaded_visualizer.get_graph(f'{file_name}_loaded_tree', ver=True)
 
 # Imprimir resultados del árbol cargado
@@ -127,3 +131,4 @@ print("Matriz de confusión (árbol cargado):")
 print(loaded_conf_matrix)
 print("Predicted Labels (árbol cargado):", loaded_y_pred)
 print("Actual Labels:", y_test.tolist())
+
