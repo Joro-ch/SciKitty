@@ -101,12 +101,25 @@ class DecisionTree:
         self.etiquetas_originales = np.unique(etiquetas)
 
 
-    @classmethod
-    def generar_arbol (cls, raiz):
-        arbol= cls([],[])
-        arbol.raiz=raiz
-        return arbol
-    
+    def get_tree(self, nodo=None):
+        if nodo is None:
+            nodo = self.raiz
+        nodo_dict = {
+            'es_hoja': nodo.es_hoja,
+            'regla': nodo.regla,
+            'etiqueta': nodo.etiqueta,
+            'impureza': nodo.impureza,
+            'etiquetas': nodo.etiquetas.tolist(),
+            'muestras': nodo.muestras
+        }
+        if not nodo.es_hoja:
+            nodo_dict['izquierda'] = self.get_tree(nodo.izquierda)
+            nodo_dict['derecha'] = self.get_tree(nodo.derecha)
+        return nodo_dict
+
+    def set_tree(self, root_node):
+        self.raiz = root_node
+        
 
     def is_balanced(self, umbral=0.5):
         """

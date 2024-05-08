@@ -1,3 +1,4 @@
+
 # --------------------------------------------------------------------------------- #
 """
     Lo siguiente es solo necesario para que Python reconozca el directorio Scikitty
@@ -20,6 +21,7 @@ sys.path.append(directorio_superior)
 
 from Scikitty.models.DecisionTree import DecisionTree
 from Scikitty.view.TreeVisualizer import TreeVisualizer
+from Scikitty.persist.TreePersistence import TreePersistence
 from Scikitty.metrics.accuracy_score import puntuacion_de_exactitud
 from Scikitty.metrics.precision_score import puntuacion_de_precision
 from Scikitty.metrics.recall_score import puntuacion_de_recall
@@ -54,6 +56,27 @@ visualizer.get_graph(f'{file_name}_tree', ver=True)
 # Imprimir resultados
 y_pred = dt.predict(X_test)
 
+accuracy = puntuacion_de_exactitud(y_test, y_pred)
+precision = puntuacion_de_precision(y_test, y_pred, average='weighted')
+recall = puntuacion_de_recall(y_test, y_pred, average='weighted')
+f1 = puntuacion_de_f1(y_test, y_pred, average='weighted')
+conf_matrix = matriz_de_confusion(y_test, y_pred)
+
+print("Exactitud:", accuracy)
+print("Precisión:", precision)
+print("Recall:", recall)
+print("F1-score:", f1)
+print("Matriz de confusión:") 
+print(conf_matrix)
+print("Predicted Labels:", y_pred)
+print("Actual Labels:", y_test.tolist())
+
+# Guardar el árbol en un archivo JSON
+TreePersistence.save_tree(dt, 'arbol_decision.json')
+nuevo_arbol = TreePersistence.load_tree('arbol_decision.json')
+nuevo_dt = DecisionTree(X_train, y_train, criterio='Entropy', min_muestras_div=2, max_profundidad=5)
+nuevo_dt.set_tree(nuevo_arbol)
+y_pred = nuevo_dt.predict(X_test)
 accuracy = puntuacion_de_exactitud(y_test, y_pred)
 precision = puntuacion_de_precision(y_test, y_pred, average='weighted')
 recall = puntuacion_de_recall(y_test, y_pred, average='weighted')
