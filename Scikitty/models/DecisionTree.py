@@ -190,52 +190,89 @@ class DecisionTree:
 
             # Se guardan la cantidad de cada caracterítica
             valores_unicos = np.unique(caracteristica)
+            print('NUEVO ELEGIR MEJOR REGLA')
+            print(f'{caracteristica=:}')
+            print(f'{valores_unicos=:}')
 
             # Verifica que la característica sea binaria
-            es_binaria = len(valores_unicos) == 2
+            es_binaria = len(valores_unicos) <= 2
 
             # Se guarda el resultado de la característica en un str
             # Si su longitud es mayor a 2, entonces es una palabra (variable categórica)
             es_categorica = isinstance(
                 caracteristica[0], str) and len(valores_unicos) > 2
             
-            # Si es una característica continua: continue
             if not (es_binaria or es_categorica):
-                continue
-
-            for valor in valores_unicos:
-                # Se crea una máscara booleana para las características con el mismo valor
-                mascara_division = caracteristica == valor
-                etiquetas_divididas = etiquetas[mascara_division]
-                probabilidad_valor = len(etiquetas_divididas) / n_muestras
-                impureza_valor = self._calcular_impureza(
-                    etiquetas_divididas)
-                impureza = probabilidad_valor * impureza_valor
-                # Crea una máscara booleana para las caracteríticas con diferente valor
-                mascara_no_division = caracteristica != valor
-                etiquetas_no_divididas = etiquetas[mascara_no_division]
-                probabilidad_no_valor = len(
-                    etiquetas_no_divididas) / n_muestras
-                impureza_no_valor = self._calcular_impureza(
-                    etiquetas_no_divididas)
-                impureza += probabilidad_no_valor * impureza_no_valor
-                # Se busca la mejor impuera comparando la anterior con la actual
-                if impureza < mejor_impureza:
-                    mejor_impureza = impureza
-                    mejor_regla = (indice, '==', valor)
-
+                    mascara_division = caracteristica <= np.median(caracteristica)
+                    
+                    etiquetas_divididas = etiquetas[mascara_division]
+                    print(f'{etiquetas_divididas=:}')
+                    probabilidad_valor = len(etiquetas_divididas) / n_muestras
+                    impureza_valor = self._calcular_impureza(
+                        etiquetas_divididas)
+                    impureza = probabilidad_valor * impureza_valor
+                    # Crea una máscara booleana para las caracteríticas con diferente valor
+                    mascara_no_division = caracteristica > np.median(caracteristica)
+                    etiquetas_no_divididas = etiquetas[mascara_no_division]
+                    print(f'{etiquetas_divididas=:}')
+                    probabilidad_no_valor = len(
+                        etiquetas_no_divididas) / n_muestras
+                    impureza_no_valor = self._calcular_impureza(
+                        etiquetas_no_divididas)
+                    impureza += probabilidad_no_valor * impureza_no_valor
+                    # Se busca la mejor impuera comparando la anterior con la actual
+                    if impureza < mejor_impureza:
+                        mejor_impureza = impureza
+                        mejor_regla = (indice, '<=', np.median(caracteristica))
+            else:
+                # Si es una característica continua: continue
+                for valor in valores_unicos:
+                    # Concepto que el profe vio ayer en clase
+                    # Se crea una máscara booleana para las características con el mismo valor
+                    mascara_division = caracteristica == valor
+                        
+                    etiquetas_divididas = etiquetas[mascara_division]
+                    print(f'{etiquetas_divididas=:}')
+                    probabilidad_valor = len(etiquetas_divididas) / n_muestras
+                    impureza_valor = self._calcular_impureza(
+                        etiquetas_divididas)
+                    impureza = probabilidad_valor * impureza_valor
+                    # Crea una máscara booleana para las caracteríticas con diferente valor
+                    mascara_no_division = caracteristica != valor
+                    etiquetas_no_divididas = etiquetas[mascara_no_division]
+                    print(f'{etiquetas_divididas=:}')
+                    probabilidad_no_valor = len(
+                        etiquetas_no_divididas) / n_muestras
+                    impureza_no_valor = self._calcular_impureza(
+                        etiquetas_no_divididas)
+                    impureza += probabilidad_no_valor * impureza_no_valor
+                    # Se busca la mejor impuera comparando la anterior con la actual
+                    if impureza < mejor_impureza:
+                        mejor_impureza = impureza
+                        mejor_regla = (indice, '==', valor)
+            print(f'{mejor_regla=:}')
         return mejor_regla, mejor_impureza
 
     def _dividir(self, caracteristicas, regla):
         """
             Divide el conjunto de datos dependiendo si cumplen la regla o no.
         """
+        print('DIVIDIENDO NODOS')
         indice_columna, condicion, valor = regla
         # Encuentra los índices que cumplen la regla (izquierda) y las que no (derecha)
-        indices_izquierda = np.where(
-            caracteristicas[:, indice_columna] == valor)[0]
-        indices_derecha = np.where(
-            caracteristicas[:, indice_columna] != valor)[0]
+        if(condicion == '<='):
+            print(f'condicion <=')
+            indices_izquierda = np.where(
+                caracteristicas[:, indice_columna] <= valor)[0]
+            indices_derecha = np.where(
+                caracteristicas[:, indice_columna] > valor)[0]
+        elif(condicion == '=='):
+            print(f'condicion ==')
+            indices_izquierda = np.where(
+                caracteristicas[:, indice_columna] == valor)[0]
+            indices_derecha = np.where(
+                caracteristicas[:, indice_columna] != valor)[0]
+        print(f'{indices_izquierda=:}, {indices_derecha=:}')
         return indices_izquierda, indices_derecha
 
     def _calcular_impureza(self, etiquetas):
@@ -245,8 +282,11 @@ class DecisionTree:
             para etiquetas multiclase o binarias, o MSE para etiquetas contínuas (target contínuo).
         """
         # Determinar si las etiquetas son continuas (no categoricas y no binarias)
-
+        print('CALCULAR IMPUREZA')
         valores_unicos = np.unique(etiquetas)
+        print(f'{etiquetas=:}')
+        if etiquetas.size == 0:
+            return 0
         es_binaria = len(valores_unicos) <= 2
         es_categorica = isinstance(etiquetas[0], str) and len(valores_unicos) > 2
 
