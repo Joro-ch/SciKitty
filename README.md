@@ -11,7 +11,7 @@ Este proyecto se deberá de correr desde el prompt Anaconda, en donde se deberá
 ```
 conda list
 ```
-4. Si en dicha lista no se encuentra las librerias **raphviz, pandas y numpy** desde el la misma consola de Anaconda se podrán instalar mediante los siguientes comandos. Durante la instalación de los comandos:
+4. Si en dicha lista no se encuentra las librerias **graphviz, pandas y numpy** desde la misma consola de Anaconda se podrán instalar mediante los siguientes comandos:
 ```
 conda install graphviz
 conda install pandas
@@ -50,7 +50,7 @@ El modelo busca predecir la cantidad de CO2 que genera un automóvil, según mar
 ## 4) ¿Cómo ejecutar el proyecto?
 Dentro de la carpeta raiz del proyecto **"Scikitty"**, se encontrá una carpeta llamada **"demos"**. Aquí se almacenan cada uno de los scripts con las demos para cada uno de los datasets planteados. Tanto su versión utilizando la libreria **"Scikitty"** como la versión utilizando **"Scikitlearn**. Para poder ejecuta cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
 1. Abrir Anaconda Prompt. 
-2. Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando cd en la consola de Anaconda Prompt, en donde se encuentran los scripts correspondiente a cada uno de los dataset. 
+2. Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando **cd** en la consola de Anaconda Prompt, en donde se encuentran los scripts correspondiente a cada uno de los dataset. 
 3. Una vez ubicado en el directorio de las **'demos'**, se podrá ejecutar cada uno de los scripts. Es necesario colocar los siguientes comando para ejecutarlos:
 *   Para poder ejecutar el árbol de decisión de **fictional_disease.csv: **
 ```
