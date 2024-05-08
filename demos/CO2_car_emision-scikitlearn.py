@@ -61,10 +61,28 @@ X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=
 dt = DecisionTreeClassifier(criterion='entropy', min_samples_split=2, max_depth=5, random_state=42)
 dt.fit(X_train, y_train)
 
+# Calcular la profundidad del árbol y el número de hojas
+n_nodes = dt.tree_.node_count
+depth = dt.tree_.max_depth
+
+# Ajustar el tamaño de la figura según la profundidad y el número de nodos
+fig_width = max(200, n_nodes / 2)
+fig_height = max(200, depth * 2)
+plt.figure(figsize=(fig_width, fig_height))
+
 # Visualizar el árbol
-plt.figure(figsize=(11, 100))
-plot_tree(dt, filled=True, feature_names=X_train.columns.tolist(), class_names=list(map(str, dt.classes_)))
-plt.savefig(f'{file_name}_tree-scikitlearn.png')
+plot_tree(
+    dt,
+    filled=True,
+    feature_names=X_train.columns.tolist(),
+    class_names=list(map(str, dt.classes_)),
+    fontsize=8  # Tamaño de la fuente fijo de 8
+)
+
+plt.savefig(f'{file_name}_tree-scikitlearn.png', bbox_inches='tight')
+
+# Mostrar el árbol graficado
+plt.show()
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)
@@ -82,7 +100,6 @@ print("Recall:", recall)
 print("F1-score:", f1)
 print("Matriz de confusión:") 
 print(conf_matrix)
-print("Etiquetas predichas:", y_pred)
-print("Etiquetas reales:", y_test.tolist())
+print("Predicted Labels:", y_pred)
+print("Actual Labels:", y_test.tolist())
 print("\nVisualizando el árbol de Sci-Kit Learn...\n")
-plt.show()
