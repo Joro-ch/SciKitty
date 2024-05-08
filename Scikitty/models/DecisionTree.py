@@ -374,6 +374,33 @@ class DecisionTree:
         """
             Entrena el árbol de decisión utilizando los datos proporcionados. Llama al proceso de construir un árbol
             con las características y etiquetas.
+
+            Parametros
+            ----------
+            Función sin parametros. Utiliza los atributos propios del árbol. 
+            
+            Ejemplos
+            --------
+            >>> from Scikitty.models.DecisionTree import DecisionTree
+            >>> from Scikitty.model_selection.train_test_split import train_test_split
+            >>> import pandas as pd
+
+            >>> # Se almacena el nombre del archivo donde se guarda el dataset
+            >>> file_name = 'fictional_reading_place'
+
+            >>> # Se cargan los datos.
+            >>> data = pd.read_csv(f'../datasets/{file_name}.csv')
+
+            >>> # Se preparan los datos.
+            >>> features = data.drop('user_action', axis=1)  # Características del dataset
+            >>> labels = data['user_action']  # Etiquetas del dataset
+
+            >>> # Se dividen los datos en conjuntos de entrenamiento y prueba.
+            >>> X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+
+            >>> # Se crea e instancia el árbol de decisión.
+            >>> dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
+            >>> dt.fit()  # Entrenar el árbol de decisión
         """
 
         # Se realizá el llamado a la función encargada de construir el árbol.
@@ -387,6 +414,26 @@ class DecisionTree:
             recursivamente a si mismo para construir el árbol de los nodos izquierda y derecha, teniendo cada uno
             de ellos un nuevo subconjunto de datos. En caso negativo, define el nodo como hoja y representará a una 
             etiqueta (la etiqueta más común que posea).
+
+            Parametros
+            ----------
+            caracteristicas: parametro que contiene un numpy array con las caracteristicas del split actual.
+            Es el restante de X_train del split anterior utilizado para calcular la impureza, mejor pregunta
+            y crear el nodo con la información relevante.
+
+            etiquetas: parametro que contiene un numpy array con las etiquetas del split actual.
+            Es el restante de Y_train del split anterior utilizado para calcular la impureza, mejor pregunta
+            y crear el nodo con la información relevante.
+
+            profundidad_actual: parametro que almacena la profundad actual del árbol. Parametro importante
+            para saber si detener la generación del árbol o seguir.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Construir Árbol es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> self.raiz = self._construir_arbol(self.caracteristicas, self.etiquetas, 0)
+            >>> ...
         """
 
         # Se obtiene la impureza del split actual.
@@ -436,6 +483,25 @@ class DecisionTree:
         """
             Indica si hay alguna razón para detener el split, ya sea debido a hiperparámetros o debido a que el
             conjunto ya es totalmente puro.
+
+            Parametros
+            ----------
+
+            etiquetas: parametro que almacena las etiquetas con las cuales se realizára el split. Necesario
+            para saber si ya no existen más de un solo tipo de datos en el array de etiquetas.
+
+            num_muestras: parametro que almacena el numero de muestras que las etiquetas almacenan. Utilizando
+            este parametro se comprueba si el numero de muestras es menor al hiperametro "min_muestras_div".
+
+            profundidad_actual: parametro que almacena la profundidad del árbol actual para saber si detener
+            la creación del arbol en base al hiperparametro "max_profundidad".
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Detener Division es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> if self._detener_division(etiquetas, caracteristicas.shape[0], profundidad_actual):
+            >>> ...
         """
 
         # Si sólo hay una etiqueta o que el número de muestras sean menores al hiperparámetro.
@@ -460,6 +526,22 @@ class DecisionTree:
             con el cálculo de la impureza, eso consiste en calcular las probabilidades de que la característica presente ese valor único y 
             de que no lo presente, y multiplicar por la impureza que utiliza como probabilidades las de cada etiqueta respecto
             a si se presentan cuando el valor del atributo es el evaluado o no, respectivamente.
+
+            Parametros
+            ----------
+
+            caracteristicas: parametro que contiene un numpy array con las caracteristicas del split actual.
+            Es el restante de X_train del split anterior utilizado para calcular la mejor pregunta.
+
+            etiquetas: parametro que contiene un numpy array con las etiquetas del split actual.
+            Es el restante de Y_train del split anterior utilizado para calcular la mejor pregunta.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Elegir Mejor Regla es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> mejor_regla, mejor_impureza = self._elegir_mejor_regla(caracteristicas, etiquetas)
+            >>> ...
         """
 
         # Selecciona la mejor regla de división para un conjunto de características y etiquetas.
@@ -532,6 +614,21 @@ class DecisionTree:
     def _dividir(self, caracteristicas, regla):
         """
             Divide el conjunto de datos dependiendo si cumplen la regla o no.
+
+            Parametros
+            ----------
+            caracteristicas: parametro que contiene un numpy array con las caracteristicas del split actual.
+            Es el restante de X_train del split anterior utilizado realizar un nuevo split.
+
+            regla: parametro que contine la información de la regla o condición a cumplir para separar los
+            datos.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Dividir es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> indices_izquierda, indices_derecha = self._dividir(caracteristicas, mejor_regla)
+            >>> ...
         """
 
         # Se obtiene el indice de la columna, la condición y el valor a comparar de la regla.
@@ -556,6 +653,18 @@ class DecisionTree:
             Escoge que criterio usar y devuelve la impureza calculada respecto a las etiquetas
             dependiendo del criterio escogido por el usuario en la definición del árbol de decisión
             para etiquetas multiclase o binarias, o MSE para etiquetas contínuas (target contínuo).
+
+            Parametros
+            ----------
+            etiquetas: parametro que contiene un numpy array con las etiquetas del split actual.
+            Es el restante de Y_train del split anterior utilizado para calcular su impureza.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Calcular Impureza es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> impureza_valor = self._calcular_impureza(etiquetas_divididas)
+            >>> ...
         """
 
         # Se optienen los valores unicos de las etiquetas.
@@ -581,6 +690,18 @@ class DecisionTree:
     def _calcular_entropia(self, etiquetas):
         """
             Devuelve la impureza utilizando las probabilidades de cada etiqueta usando el criterio entropía.
+
+            Parametros
+            ----------
+            etiquetas: parametro que contiene un numpy array con las etiquetas del split actual.
+            Es el restante de Y_train del split anterior utilizado para calcular su entropía.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Calcular Entropia es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> impureza_valor = self._calcular_entropia(etiquetas)
+            >>> ...
         """
 
         # Se obtienen las cantidades totales de los valores unicos de las etiquetas.
@@ -595,6 +716,18 @@ class DecisionTree:
     def _calcular_gini(self, etiquetas):
         """
             Devuelve la impureza utilizando las probabilidades de cada etiqueta usando el criterio gini.
+
+            Parametros
+            ----------
+            etiquetas: parametro que contiene un numpy array con las etiquetas del split actual.
+            Es el restante de Y_train del split anterior utilizado para calcular su indice gini.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Calcular Gini es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> impureza_valor = self._calcular_gini(etiquetas)
+            >>> ...
         """
 
         # Se obtienen las cantidades totales de los valores unicos de las etiquetas.
@@ -610,6 +743,18 @@ class DecisionTree:
     def _calcular_mse(self, etiquetas):
         """
             Devuelve la impureza utilizando las probabilidades de cada etiqueta usando MSE, donde y_hat es el promedio de y.
+        
+            Parametros
+            ----------
+            etiquetas: parametro que contiene un numpy array con las etiquetas del split actual.
+            Es el restante de Y_train del split anterior utilizado para calcular su MSE.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Calcular MSE es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> impureza_valor = self._calcular_mse(etiquetas)
+            >>> ...
         """
 
         # Se comprueba que la cantidad de etiquetas sea igual a cero para retornar 0 dado el caso.
@@ -626,6 +771,37 @@ class DecisionTree:
     def predict(self, caracteristicas):
         """
             Devuelve las predicciones de cada instancia del Dataset.
+
+            Parametros
+            ----------
+            caracteristicas: parametro que contiene un numpy array con las caracteristicas del split actual.
+            Es el  X_Test del modelo utilizado para predecir los posibles datos.
+
+            Ejemplos
+            --------
+            >>> from Scikitty.models.DecisionTree import DecisionTree
+            >>> from Scikitty.model_selection.train_test_split import train_test_split
+            >>> import pandas as pd
+
+            >>> # Se almacena el nombre del archivo donde se guarda el dataset.
+            >>> file_name = 'fictional_reading_place'
+
+            >>> # Se cargan los datos.
+            >>> data = pd.read_csv(f'../datasets/{file_name}.csv')
+
+            >>> # Se preparan los datos.
+            >>> features = data.drop('user_action', axis=1)  # Características del dataset
+            >>> labels = data['user_action']  # Etiquetas del dataset
+
+            >>> # Se dividen los datos en conjuntos de entrenamiento y prueba.
+            >>> X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+
+            >>> # Se crea e instanciar el árbol de decisión.
+            >>> dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
+            >>> dt.fit()  # Entrenar el árbol de decisión
+
+            >>> # Se imprimen los resultados de evaluación del modelo.
+            >>> y_pred = dt.predict(X_test)
         """
 
         # Se crea un numpu array utilizando las caracteristicas.
@@ -639,6 +815,21 @@ class DecisionTree:
         """
             Determina la predicción para una instancia del dataset dependiendo si sus características cumplen
             las reglas de los nodos del árbol.
+
+            Parametros
+            ----------
+            caracteristicas: parametro que contiene un numpy array con las caracteristicas del split actual.
+            Es el X_Test del modelo utilizado para predecir los posibles datos.
+
+            nodo: parametro que contiene el nodo raiz del árbol utilizado para llamar de forma recursiva
+            está función para realizar las predicciones en cada uno de los nodos y recopilar los datos.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Predict Individual es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> self._predict_individual(caracteristica, self.raiz)
+            >>> ...
         """
 
         # Si es una hoja devuelve la etiqueta como predicción
@@ -655,6 +846,20 @@ class DecisionTree:
     def _seguir_regla(self, caracteristica, regla):
         """
             Devuelve el booleano que indica si cumple o no la regla dependiendo si la regla es <= o ==.
+       
+            Parametros
+            ----------
+            caracteristicas: parametro que contiene un numpy array con las caracteristicas del split actual.
+
+            regla: parametro que contiene la regla a evaluar en la función para saber si las caracteristicas
+            cumplen o no con ella.
+
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Seguir Regla es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> if self._seguir_regla(caracteristica, nodo.regla):
+            >>> ...
         """
 
         # Se obtiene el indice de la columna, la condición y el valor del elemento a comparar en base a la regla.
@@ -672,6 +877,43 @@ class DecisionTree:
     def imprimir_arbol(self, nodo=None, profundidad=0, condicion="Raíz"):
         """
             Imprime el árbol mediante prints.
+
+            Parametros
+            ----------
+            nodo: se obtiene el nodo raiz del árbol para recorrer todos los nodos del árbol. Esto
+            ayuda a imprimir cada nodo de forma separada.
+
+            profundida: se obtiene la profundiad actual a la cual está recorriendo la función. Esto
+            ayuda a imprimir y llevar el control de la profundidad actual del árbol y de los nodos.
+
+            condicion: se obtien la condición que se utilizo en el nodo actual del árbol para poder
+            imprimirlo como parte de los datos mostrados.
+
+            Ejemplos
+            --------
+            >>> from Scikitty.models.DecisionTree import DecisionTree
+            >>> from Scikitty.model_selection.train_test_split import train_test_split
+            >>> import pandas as pd
+
+            >>> # Se almacena el nombre del archivo donde se guarda el dataset.
+            >>> file_name = 'fictional_reading_place'
+
+            >>> # Se cargan los datos.
+            >>> data = pd.read_csv(f'../datasets/{file_name}.csv')
+
+            >>> # Se preparan los datos.
+            >>> features = data.drop('user_action', axis=1)  # Características del dataset
+            >>> labels = data['user_action']  # Etiquetas del dataset
+
+            >>> # Se dividen los datos en conjuntos de entrenamiento y prueba.
+            >>> X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+
+            >>> # Se crea e instanciar el árbol de decisión.
+            >>> dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
+            >>> dt.fit()  # Entrenar el árbol de decisión
+
+            >>> # Se imprime el árbol de decisión.
+            >>> dt.imprimir_arbol()
         """
 
         # Se comprueba si el nodo es igual a None para igualar el nodo a la raiz.
@@ -699,6 +941,37 @@ class DecisionTree:
             Usa recursión para devolver la estructura completa de un árbol, incluyendo en cada
             nodo información relevante dependiendo si es un nodo hoja o un nodo de decisión que
             representa una regla/pregunta.
+
+            Parametros
+            ----------
+            nodo: atributo que obtiene la raiz del árbol para poder obtener toda la estructura
+            de dicho árbol en base a este atributo.
+
+            Ejemplos
+            --------
+            >>> from Scikitty.models.DecisionTree import DecisionTree
+            >>> from Scikitty.model_selection.train_test_split import train_test_split
+            >>> import pandas as pd
+
+            >>> # Se almacena el nombre del archivo donde se guarda el dataset
+            >>> file_name = 'playTennis'
+
+            >>> # Se cargan los datos.
+            >>> data = pd.read_csv(f'../datasets/{file_name}.csv')
+
+            >>> # Se preparan los datos.
+            >>> features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
+            >>> labels = data['Play Tennis']
+
+            >>> # Se dividen los datos.
+            >>> X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+
+            >>> # Se crea e instancia el árbol de decisión.
+            >>> dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
+            >>> dt.fit()
+
+            >>> # Se visualiza el árbol de decisión.
+            >>> tree_structure = dt.get_tree_structure()
         """
         if nodo is None:
             nodo = self.raiz
