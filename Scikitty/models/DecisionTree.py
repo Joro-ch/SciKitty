@@ -83,7 +83,7 @@ class DecisionTree:
         self.raiz = self._construir_arbol(
         self.caracteristicas, self.etiquetas, 0)
 
-    def _construir_arbol(self, caracteristicas, etiquetas, profundidad_actual, direccion='izquierda'):
+    def _construir_arbol(self, caracteristicas, etiquetas, profundidad_actual):
         """
             Valida si se debe seguir dividiendo el conjunto de datos, en caso afirmativo, busca la mejor regla de
             división y divide el conjunto de datos en izquierda y derecha según la regla de división y llama 
@@ -345,13 +345,20 @@ class DecisionTree:
 
             etiquetasUnicas, count = np.unique(nodo.etiquetas, return_counts=True)
 
-            print(self.etiquetas_originales)
+            print(count, count.size)
+
+            if count.size > 1:
+                print(count[1])
 
             valor = ""
-            if self.etiquetas_originales[0] == etiquetasUnicas[0]:
+            if self.etiquetas_originales[0] == etiquetasUnicas[0] and count.size == 1:
                 valor = f"[{count[0]}, 0]"
-            else:
+            elif self.etiquetas_originales[0] != etiquetasUnicas[0] and count.size == 1:
                 valor = f"[0, {count[0]}]"
+            elif self.etiquetas_originales[0] == etiquetasUnicas[0] and count.size != 1:
+                valor = f"[{count[0]}, {count[1]}]"
+            else:
+                valor = f"[{count[1]}, {count[0]}]"
 
             # Guarda la información relevante del nodo
             info = f"""
