@@ -1,3 +1,27 @@
+# --------------------------------------------------------------------------------- #
+"""
+    Autores:
+    1) Nombre: John Rojas Chinchilla
+       ID: 118870938
+       Correo: john.rojas.chinchilla@est.una.ac.cr
+       Horario: 1pm
+
+    2) Nombre: Abigail Salas
+       ID: 402570890
+       Correo: abigail.salas.ramirez@est.una.ac.cr
+       Horario: 1pm
+
+    3) Nombre: Axel Monge Ramirez
+       ID: 118640655
+       Correo: axel.monge.ramirez@est.una.ac.cr
+       Horario: 1pm
+
+    4) Nombre: Andrel Ramirez Solis
+       ID: 118460426
+       Correo: andrel.ramirez.solis@est.una.ac.cr
+       Horario: 1pm
+"""
+# --------------------------------------------------------------------------------- #
 import sklearn.model_selection
 
 def train_test_split(X, y, test_size=0.2, random_state=None):
