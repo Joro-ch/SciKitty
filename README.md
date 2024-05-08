@@ -24,8 +24,7 @@ Sin embargo para este proyecto sólo se tomarán las características categóric
 ### 4) ¿Cómo ejecutar el proyecto?
 Para poder ejecuta cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
 * Abrir Anaconda prompt
-* Se debe de ubicar en el directorio 'scripts' del proyecto, en donde se encuentran los scripts correspondiente a cada uno de los dataset. Para poder ejecutar cada uno de ellos, es necesario colocar los siguientes comandos:
-* Se debe de ubicar en el directorio Scikitty utilizando el comando cd, en donde se encuentran los scripts correspondiente a cada uno de los dataset. Para poder ejecutar cada uno de ellos, es necesario colocar los siguientes comandos:
+* Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando cd, en donde se encuentran los scripts correspondiente a cada uno de los dataset. Para poder ejecutar cada uno de ellos, es necesario colocar los siguientes comandos:
 
 * Para poder ejecutar el árbol de decisión de fictional_disease.csv: 
 ```
