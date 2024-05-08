@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 class Nodo:
-    def __init__(self, es_hoja=False, regla=None, etiqueta=None, impureza=0, muestras=0, etiquetas=[]):
+    def __init__(self, es_hoja=False, regla=None, etiqueta=None, impureza=0, etiquetas=np.array([])):
         """
             Inicializa un nodo del árbol de decisión, cada nodo tiene su regla de división además
             de un atributo que indica si es un nodo final (hoja). Nuestro algoritmo está diseñado
@@ -19,8 +19,8 @@ class Nodo:
         self.izquierda = None
         self.derecha = None
         self.impureza = impureza
-        self.muestras = muestras
         self.etiquetas = etiquetas
+        self.muestras = etiquetas.size
 
     def __str__(self):
         """
@@ -52,13 +52,22 @@ class DecisionTree:
         # Inicializa el árbol de decisión con los parámetros dados.
         self.caracteristicas = np.array(caracteristicas)
         self.etiquetas = np.array(etiquetas)
-        self.nombres_caracteristicas = caracteristicas.columns.tolist() if isinstance(caracteristicas,
-        pd.DataFrame) else [f'Característica[{i}]' for i in range(np.array(caracteristicas).shape[1])]
+        if len(caracteristicas) > 0:
+            self.nombres_caracteristicas = caracteristicas.columns.tolist() if isinstance(caracteristicas,
+            pd.DataFrame) else [f'Característica[{i}]' for i in range(np.array(caracteristicas).shape[1])]
+        else: self.nombres_caracteristicas = []
         self.criterio = criterio
         self.min_muestras_div = min_muestras_div
         self.max_profundidad = max_profundidad
         self.raiz = None
         self.etiquetas_originales = np.unique(etiquetas)
+
+    @classmethod
+    def generar_arbol (cls, raiz):
+        arbol= cls([],[])
+        arbol.raiz=raiz
+        return arbol
+        
 
     def is_balanced(self, umbral=0.5):
         """
@@ -83,7 +92,7 @@ class DecisionTree:
         self.raiz = self._construir_arbol(
         self.caracteristicas, self.etiquetas, 0)
 
-    def _construir_arbol(self, caracteristicas, etiquetas, profundidad_actual, direccion='izquierda'):
+    def _construir_arbol(self, caracteristicas, etiquetas, profundidad_actual):
         """
             Valida si se debe seguir dividiendo el conjunto de datos, en caso afirmativo, busca la mejor regla de
             división y divide el conjunto de datos en izquierda y derecha según la regla de división y llama 
@@ -109,7 +118,6 @@ class DecisionTree:
             return Nodo(es_hoja=True, 
                         etiqueta=self._etiqueta_mas_comun(etiquetas), 
                         impureza=self._calcular_impureza(etiquetas),
-                        muestras=etiquetas.size,
                         etiquetas=etiquetas,
                         )
 
@@ -117,7 +125,6 @@ class DecisionTree:
             return Nodo(es_hoja=True, 
                         etiqueta=self._etiqueta_mas_comun(etiquetas), 
                         impureza=self._calcular_impureza(etiquetas),
-                        muestras=etiquetas.size,
                         etiquetas=etiquetas
                         )
         
@@ -128,13 +135,13 @@ class DecisionTree:
         
         # Al nodo raíz se le asigna la mejor característica según su impureza
         # Se le agrega el subárbol izquierdo y el derecho
-        nodo = Nodo(regla=mejor_regla)
+        
+        nodo_etiqueta = self._etiqueta_mas_comun(etiquetas)
+        nodo_impureza = self._calcular_impureza(etiquetas)
+        nodo = Nodo(etiqueta=nodo_etiqueta, regla=mejor_regla, impureza=nodo_impureza, etiquetas=etiquetas)
         nodo.izquierda = subarbol_izquierdo
         nodo.derecha = subarbol_derecho
-        nodo.impureza = self._calcular_impureza(etiquetas)
-        nodo.muestras = etiquetas.size
-        nodo.etiquetas = etiquetas
-
+        
         return nodo
 
     def _detener_division(self, etiquetas, num_muestras, profundidad_actual):
@@ -183,39 +190,58 @@ class DecisionTree:
             valores_unicos = np.unique(caracteristica)
 
             # Verifica que la característica sea binaria
-            es_binaria = len(valores_unicos) == 2
+            es_binaria = len(valores_unicos) <= 2
 
             # Se guarda el resultado de la característica en un str
             # Si su longitud es mayor a 2, entonces es una palabra (variable categórica)
             es_categorica = isinstance(
                 caracteristica[0], str) and len(valores_unicos) > 2
             
-            # Si es una característica continua: continue
             if not (es_binaria or es_categorica):
-                continue
+                # Ordena los valores únicos y calcula los puntos medios posibles para realizar splits
+                valores_ordenados = np.sort(valores_unicos)
+                puntos_medios = (valores_ordenados[:-1] + valores_ordenados[1:]) / 2
+                
+                for punto in puntos_medios:
+                    mascara_division = caracteristica <= punto
+                    etiquetas_divididas = etiquetas[mascara_division]
+                    probabilidad_valor = len(etiquetas_divididas) / n_muestras
+                    impureza_valor = self._calcular_impureza(etiquetas_divididas)
+                    impureza = probabilidad_valor * impureza_valor
 
-            for valor in valores_unicos:
-                # Concepto que el profe vio ayer en clase
-                # Se crea una máscara booleana para las características con el mismo valor
-                mascara_division = caracteristica == valor
-                etiquetas_divididas = etiquetas[mascara_division]
-                probabilidad_valor = len(etiquetas_divididas) / n_muestras
-                impureza_valor = self._calcular_impureza(
-                    etiquetas_divididas)
-                impureza = probabilidad_valor * impureza_valor
-                # Crea una máscara booleana para las caracteríticas con diferente valor
-                mascara_no_division = caracteristica != valor
-                etiquetas_no_divididas = etiquetas[mascara_no_division]
-                probabilidad_no_valor = len(
-                    etiquetas_no_divididas) / n_muestras
-                impureza_no_valor = self._calcular_impureza(
-                    etiquetas_no_divididas)
-                impureza += probabilidad_no_valor * impureza_no_valor
-                # Se busca la mejor impuera comparando la anterior con la actual
-                if impureza < mejor_impureza:
-                    mejor_impureza = impureza
-                    mejor_regla = (indice, '==', valor)
+                    mascara_no_division = caracteristica > punto
+                    etiquetas_no_divididas = etiquetas[mascara_no_division]
+                    probabilidad_no_valor = len(etiquetas_no_divididas) / n_muestras
+                    impureza_no_valor = self._calcular_impureza(etiquetas_no_divididas)
+                    impureza += probabilidad_no_valor * impureza_no_valor
 
+                    if impureza <= mejor_impureza:
+                        mejor_impureza = impureza
+                        mejor_regla = (indice, '<=', punto)
+            else:
+                # Si la característica no es binaria, se evalúa cada valor único de la característica
+                for valor in valores_unicos:
+                    # Concepto que el profe vio ayer en clase
+                    # Se crea una máscara booleana para las características con el mismo valor
+                    mascara_division = caracteristica == valor
+                        
+                    etiquetas_divididas = etiquetas[mascara_division]
+                    probabilidad_valor = len(etiquetas_divididas) / n_muestras
+                    impureza_valor = self._calcular_impureza(
+                        etiquetas_divididas)
+                    impureza = probabilidad_valor * impureza_valor
+                    # Crea una máscara booleana para las caracteríticas con diferente valor
+                    mascara_no_division = caracteristica != valor
+                    etiquetas_no_divididas = etiquetas[mascara_no_division]
+                    probabilidad_no_valor = len(
+                        etiquetas_no_divididas) / n_muestras
+                    impureza_no_valor = self._calcular_impureza(
+                        etiquetas_no_divididas)
+                    impureza += probabilidad_no_valor * impureza_no_valor
+                    # Se busca la mejor impuera comparando la anterior con la actual
+                    if impureza <= mejor_impureza:
+                        mejor_impureza = impureza
+                        mejor_regla = (indice, '==', valor)
         return mejor_regla, mejor_impureza
 
     def _dividir(self, caracteristicas, regla):
@@ -224,10 +250,16 @@ class DecisionTree:
         """
         indice_columna, condicion, valor = regla
         # Encuentra los índices que cumplen la regla (izquierda) y las que no (derecha)
-        indices_izquierda = np.where(
-            caracteristicas[:, indice_columna] == valor)[0]
-        indices_derecha = np.where(
-            caracteristicas[:, indice_columna] != valor)[0]
+        if(condicion == '<='):
+            indices_izquierda = np.where(
+                caracteristicas[:, indice_columna] <= valor)[0]
+            indices_derecha = np.where(
+                caracteristicas[:, indice_columna] > valor)[0]
+        elif(condicion == '=='):
+            indices_izquierda = np.where(
+                caracteristicas[:, indice_columna] == valor)[0]
+            indices_derecha = np.where(
+                caracteristicas[:, indice_columna] != valor)[0]
         return indices_izquierda, indices_derecha
 
     def _calcular_impureza(self, etiquetas):
@@ -237,8 +269,9 @@ class DecisionTree:
             para etiquetas multiclase o binarias, o MSE para etiquetas contínuas (target contínuo).
         """
         # Determinar si las etiquetas son continuas (no categoricas y no binarias)
-
         valores_unicos = np.unique(etiquetas)
+        if etiquetas.size == 0:
+            return 0
         es_binaria = len(valores_unicos) <= 2
         es_categorica = isinstance(etiquetas[0], str) and len(valores_unicos) > 2
 
@@ -301,11 +334,16 @@ class DecisionTree:
 
     def _seguir_regla(self, caracteristica, regla):
         """
-            Devuelve el booleano que indica si cumple o no la regla dependiendo si la regla es == o !=.
+            Devuelve el booleano que indica si cumple o no la regla dependiendo si la regla es <= o ==.
         """
         indice_columna, condicion, valor = regla
         # Comprueba si la característica cumple con la regla a seguir
-        return caracteristica[indice_columna] == valor if condicion == '==' else caracteristica[indice_columna] != valor
+        if condicion == '==':
+            return caracteristica[indice_columna] == valor
+        elif condicion == '<=':
+            return caracteristica[indice_columna] <= valor
+        else:
+            return caracteristica[indice_columna] > valor
 
     def imprimir_arbol(self, nodo=None, profundidad=0, condicion="Raíz"):
         """
@@ -336,51 +374,51 @@ class DecisionTree:
         if nodo is None:
             nodo = self.raiz
 
-        # Si es una hoja retorna la siguiente información
+        # Si es una hoja retorna la siguiente información.
         if nodo.es_hoja:
-            entropyNumber = round(nodo.impureza, 3)
 
-            if entropyNumber <= -0.0:
-                entropyNumber = 0
+            # Se obtiene la impureza del nodo y se redondea a solo 3 decimales.
+            numeroImpureza = round(nodo.impureza, 3)
 
-            etiquetasUnicas, count = np.unique(nodo.etiquetas, return_counts=True)
-
+            # Se comprueba que sea mayor a "-0.0" para establecer el valor en 0 si no es el caso.
+            if numeroImpureza <= -0.0:
+                numeroImpureza = 0
+            
+            # Se obtienen los valores unicos de las etiquetas con sus cantidades.
+            etiquetasUnicas, cuenta = np.unique(nodo.etiquetas, return_counts=True)
+            
+            # Se comprueba la cantidad de valores para graficar diferente los values de cada nodo.
             valor = ""
-            if self.etiquetas_originales[0] == etiquetasUnicas[0]:
-                valor = f"[{count[0]}, 0]"
+            if self.etiquetas_originales[0] == etiquetasUnicas[0] and cuenta.size == 1:
+                valor = f"[{cuenta[0]}, 0]"
+            elif self.etiquetas_originales[0] != etiquetasUnicas[0] and cuenta.size == 1:
+                valor = f"[0, {cuenta[0]}]"
+            elif self.etiquetas_originales[0] == etiquetasUnicas[0] and cuenta.size == 2:
+                valor = f"[{cuenta[0]}, {cuenta[1]}]"
             else:
-                valor = f"[0, {count[0]}]"
+                valor = f"[{cuenta[1]}, {cuenta[0]}]"
 
-            # Guarda la información relevante del nodo
-            info = f"""
-                {self.criterio}: {entropyNumber}
-                muestras: {nodo.muestras}
-                valor: {valor}
-                clase: {self._etiqueta_mas_comun(nodo.etiquetas)}
-            """
-
+            # Guarda la información relevante del nodo.
             return {
                 "tipo": "Hoja", 
-                "regla": info
+                "criterio": f"{self.criterio}:{numeroImpureza}",
+                "muestras": f"muestras: {nodo.muestras}",
+                "valor": f"valor: {valor}",
+                "clase": f"clase: {nodo.etiqueta}"
             }
         else:
             nombre_columna = self.nombres_caracteristicas[nodo.regla[0]]
-
-            etiquetasUnicas, count = np.unique(nodo.etiquetas, return_counts=True)
-
-            # Guarda la información relevante del nodo
-            info = f"""
-                {nombre_columna} {nodo.regla[1]} {nodo.regla[2]}
-                {self.criterio}: {round(nodo.impureza, 3)}
-                muestras: {nodo.muestras}
-                valor: [{count[0]}, {count[1]}]
-                clase: {self._etiqueta_mas_comun(nodo.etiquetas)}
-            """
+            etiquetasUnicas, cuenta = np.unique(nodo.etiquetas, return_counts=True)
 
             # Devuelve la información relevante del nodo
             return {
                 "tipo": "Decision",
-                "regla": info,
+                "reglaDescritiva": f"{nombre_columna} {nodo.regla[1]} {nodo.regla[2]}",
+                "regla": f"{nodo.regla[0]} {nodo.regla[1]} {nodo.regla[2]}",
                 "izquierda": self.get_tree_structure(nodo.izquierda), # Obtiene la estructura izquierda
-                "derecha": self.get_tree_structure(nodo.derecha) # Obtiene la estructua derecha
+                "derecha": self.get_tree_structure(nodo.derecha), # Obtiene la estructua derecha
+                "criterio": f"{self.criterio}:{round(nodo.impureza, 3)}",
+                "muestras": f"muestras: {nodo.muestras}",
+                "valor": f"valor: [{cuenta[0]}, {cuenta[1]}]",
+                "clase": f"clase: {nodo.etiqueta}",
             }

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 file_name = 'playTennis'
 
 # Cargar los datos
-data = pd.read_csv(f'datasets/{file_name}.csv')
+data = pd.read_csv(f'../datasets/{file_name}.csv')
 
 # Preparar los datos
 features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
