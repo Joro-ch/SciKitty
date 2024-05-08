@@ -29,27 +29,27 @@ from Scikitty.model_selection.train_test_split import train_test_split
 import pandas as pd
 
 # Se almacena el nombre del archivo donde se guarda el dataset
-file_name = 'fictional_reading_place'
+file_name = 'CO2_car_emision'
 
 # Cargar los datos
 data = pd.read_csv(f'../datasets/{file_name}.csv')
 
 # Preparar los datos
-features = data.drop('user_action', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
-labels = data['user_action']
+features = data.drop('CO2', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
+labels = data['CO2']
 
 # Dividir los datos
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el árbol de decisión
-dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+dt = DecisionTree(X_train, y_train, criterio='Entropy', min_muestras_div=2, max_profundidad=5)
 dt.fit()
 
 # Visualizar el árbol
 tree_structure = dt.get_tree_structure()
 visualizer = TreeVisualizer()
 visualizer.graph_tree(tree_structure)
-visualizer.get_graph(f'{file_name}_tree') # Esto generará el archivo 'tree_output.png' en el directorio actual
+visualizer.get_graph(f'{file_name}_tree')  # Esto generará el archivo 'tree_output.png' en el directorio actual
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)

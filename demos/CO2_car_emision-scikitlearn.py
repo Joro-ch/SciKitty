@@ -1,34 +1,32 @@
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # Se almacena el nombre del archivo donde se guarda el dataset
-file_name = 'playTennis'
+file_name = 'CO2_car_emision'
 
 # Cargar los datos
 data = pd.read_csv(f'../datasets/{file_name}.csv')
 
-# Preparar los datos
-features = data.drop('Play Tennis', axis=1)  # Asume que 'Play Tennis' es la columna objetivo
-labels = data['Play Tennis']
+# Codificar variables categóricas
+data_encoded = pd.get_dummies(data, columns=['Car', 'Model'])
 
-# Codificar las variables categóricas
-encoder = OneHotEncoder()
-features_encoded = encoder.fit_transform(features)
+# Preparar los datos
+features = data_encoded.drop('CO2', axis=1)
+labels = data_encoded['CO2']
 
 # Dividir los datos
-X_train, X_test, y_train, y_test = train_test_split(features_encoded, labels, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el árbol de decisión
-dt = DecisionTreeClassifier(criterion='gini', min_samples_split=2, max_depth=5, random_state=42)
+dt = DecisionTreeClassifier(criterion='entropy', min_samples_split=2, max_depth=5, random_state=42)
 dt.fit(X_train, y_train)
 
 # Visualizar el árbol
-plt.figure(figsize=(10,6))
-plot_tree(dt, feature_names=encoder.get_feature_names_out().tolist(), class_names=dt.classes_.tolist(), filled=True)
+plt.figure(figsize=(120, 80))
+plot_tree(dt, filled=True, feature_names=X_train.columns.tolist(), class_names=list(map(str, dt.classes_)))
 plt.savefig(f'{file_name}_tree-scikitlearn.png')
 
 # Imprimir resultados
@@ -44,7 +42,8 @@ print("Exactitud:", accuracy)
 print("Precisión:", precision)
 print("Recall:", recall)
 print("F1-score:", f1)
-print("Matriz de confusión:") 
+print("Matriz de confusión:")
 print(conf_matrix)
-print("Predicted Labels:", y_pred)
-print("Actual Labels:", y_test.tolist())
+print("Etiquetas predichas:", y_pred)
+print("Etiquetas reales:", y_test.tolist())
+
