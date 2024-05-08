@@ -1,0 +1,72 @@
+digraph {
+	hoja_2147264924736 [label="entropy:0
+muestras: 3
+valor: [0, 3]
+clase: Yes" fillcolor="#ffa500" shape=box style=filled]
+	decision_2147263929472 -> hoja_2147264924736 [label=True]
+	hoja_2147262242688 [label="entropy:0
+muestras: 2
+valor: [0, 2]
+clase: Yes" fillcolor="#ffa500" shape=box style=filled]
+	decision_2147264928832 -> hoja_2147262242688 [label=True]
+	hoja_2147264930112 [label="entropy:0
+muestras: 1
+valor: [1, 0]
+clase: No" fillcolor="#ffa500" shape=box style=filled]
+	decision_2147264929792 -> hoja_2147264930112 [label=True]
+	hoja_2147264929344 [label="entropy:0
+muestras: 1
+valor: [0, 1]
+clase: Yes" fillcolor="#ffa500" shape=box style=filled]
+	decision_2147264929792 -> hoja_2147264929344 [label=False]
+	decision_2147264929792 [label="Outlook == Sunny
+entropy:1.0
+muestras: 2
+valor: [1, 1]
+clase: No" fillcolor="#5a9ad5" shape=box style=filled]
+	decision_2147264928832 -> decision_2147264929792 [label=False]
+	decision_2147264928832 [label="Humidity == Normal
+entropy:0.811
+muestras: 4
+valor: [1, 3]
+clase: Yes" fillcolor="#5a9ad5" shape=box style=filled]
+	decision_2147264930240 -> decision_2147264928832 [label=True]
+	hoja_2147264929024 [label="entropy:0
+muestras: 1
+valor: [0, 1]
+clase: Yes" fillcolor="#ffa500" shape=box style=filled]
+	decision_2147264930176 -> hoja_2147264929024 [label=True]
+	hoja_2147264923776 [label="entropy:0
+muestras: 1
+valor: [1, 0]
+clase: No" fillcolor="#ffa500" shape=box style=filled]
+	decision_2147264930176 -> hoja_2147264923776 [label=False]
+	decision_2147264930176 [label="Temperature == Mild
+entropy:1.0
+muestras: 2
+valor: [1, 1]
+clase: No" fillcolor="#5a9ad5" shape=box style=filled]
+	decision_2147264929920 -> decision_2147264930176 [label=True]
+	hoja_2147261446656 [label="entropy:0
+muestras: 2
+valor: [2, 0]
+clase: No" fillcolor="#ffa500" shape=box style=filled]
+	decision_2147264929920 -> hoja_2147261446656 [label=False]
+	decision_2147264929920 [label="Humidity == Normal
+entropy:0.811
+muestras: 4
+valor: [3, 1]
+clase: No" fillcolor="#5a9ad5" shape=box style=filled]
+	decision_2147264930240 -> decision_2147264929920 [label=False]
+	decision_2147264930240 [label="Wind == Weak
+entropy:1.0
+muestras: 8
+valor: [4, 4]
+clase: No" fillcolor="#5a9ad5" shape=box style=filled]
+	decision_2147263929472 -> decision_2147264930240 [label=False]
+	decision_2147263929472 [label="Outlook == Overcast
+entropy:0.946
+muestras: 11
+valor: [4, 7]
+clase: Yes" fillcolor="#5a9ad5" shape=box style=filled]
+}

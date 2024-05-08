@@ -1,0 +1,338 @@
+{
+    "es_hoja": false,
+    "regla": [
+        0,
+        "<=",
+        20.0
+    ],
+    "etiqueta": "diseased",
+    "impureza": 1.0,
+    "etiquetas": [
+        "not_diseased",
+        "not_diseased",
+        "not_diseased",
+        "not_diseased",
+        "diseased",
+        "not_diseased",
+        "not_diseased",
+        "diseased",
+        "diseased",
+        "not_diseased",
+        "diseased",
+        "not_diseased",
+        "not_diseased",
+        "diseased",
+        "diseased",
+        "diseased",
+        "diseased",
+        "not_diseased",
+        "not_diseased",
+        "diseased",
+        "not_diseased",
+        "diseased",
+        "not_diseased",
+        "diseased",
+        "diseased",
+        "diseased",
+        "not_diseased",
+        "diseased"
+    ],
+    "muestras": 28,
+    "izquierda": {
+        "es_hoja": true,
+        "regla": null,
+        "etiqueta": "not_diseased",
+        "impureza": -0.0,
+        "etiquetas": [
+            "not_diseased",
+            "not_diseased"
+        ],
+        "muestras": 2
+    },
+    "derecha": {
+        "es_hoja": false,
+        "regla": [
+            0,
+            "<=",
+            23.5
+        ],
+        "etiqueta": "diseased",
+        "impureza": 0.9957274520849255,
+        "etiquetas": [
+            "not_diseased",
+            "not_diseased",
+            "not_diseased",
+            "not_diseased",
+            "diseased",
+            "not_diseased",
+            "not_diseased",
+            "diseased",
+            "diseased",
+            "diseased",
+            "not_diseased",
+            "diseased",
+            "diseased",
+            "diseased",
+            "diseased",
+            "not_diseased",
+            "not_diseased",
+            "diseased",
+            "not_diseased",
+            "diseased",
+            "not_diseased",
+            "diseased",
+            "diseased",
+            "diseased",
+            "not_diseased",
+            "diseased"
+        ],
+        "muestras": 26,
+        "izquierda": {
+            "es_hoja": true,
+            "regla": null,
+            "etiqueta": "diseased",
+            "impureza": -0.0,
+            "etiquetas": [
+                "diseased",
+                "diseased"
+            ],
+            "muestras": 2
+        },
+        "derecha": {
+            "es_hoja": false,
+            "regla": [
+                1,
+                "==",
+                "Male"
+            ],
+            "etiqueta": "diseased",
+            "impureza": 1.0,
+            "etiquetas": [
+                "not_diseased",
+                "not_diseased",
+                "not_diseased",
+                "not_diseased",
+                "diseased",
+                "not_diseased",
+                "not_diseased",
+                "diseased",
+                "diseased",
+                "diseased",
+                "not_diseased",
+                "diseased",
+                "diseased",
+                "diseased",
+                "not_diseased",
+                "not_diseased",
+                "diseased",
+                "not_diseased",
+                "diseased",
+                "not_diseased",
+                "diseased",
+                "diseased",
+                "not_diseased",
+                "diseased"
+            ],
+            "muestras": 24,
+            "izquierda": {
+                "es_hoja": false,
+                "regla": [
+                    0,
+                    "<=",
+                    38.5
+                ],
+                "etiqueta": "diseased",
+                "impureza": 0.954434002924965,
+                "etiquetas": [
+                    "not_diseased",
+                    "not_diseased",
+                    "diseased",
+                    "diseased",
+                    "diseased",
+                    "diseased",
+                    "diseased",
+                    "diseased",
+                    "not_diseased",
+                    "not_diseased",
+                    "diseased",
+                    "not_diseased",
+                    "diseased",
+                    "diseased",
+                    "not_diseased",
+                    "diseased"
+                ],
+                "muestras": 16,
+                "izquierda": {
+                    "es_hoja": false,
+                    "regla": [
+                        0,
+                        "<=",
+                        24.5
+                    ],
+                    "etiqueta": "not_diseased",
+                    "impureza": 0.9910760598382222,
+                    "etiquetas": [
+                        "not_diseased",
+                        "not_diseased",
+                        "diseased",
+                        "diseased",
+                        "not_diseased",
+                        "not_diseased",
+                        "diseased",
+                        "not_diseased",
+                        "diseased"
+                    ],
+                    "muestras": 9,
+                    "izquierda": {
+                        "es_hoja": true,
+                        "regla": null,
+                        "etiqueta": "not_diseased",
+                        "impureza": -0.0,
+                        "etiquetas": [
+                            "not_diseased"
+                        ],
+                        "muestras": 1
+                    },
+                    "derecha": {
+                        "es_hoja": true,
+                        "regla": null,
+                        "etiqueta": "diseased",
+                        "impureza": 1.0,
+                        "etiquetas": [
+                            "not_diseased",
+                            "not_diseased",
+                            "diseased",
+                            "diseased",
+                            "not_diseased",
+                            "not_diseased",
+                            "diseased",
+                            "diseased"
+                        ],
+                        "muestras": 8
+                    }
+                },
+                "derecha": {
+                    "es_hoja": false,
+                    "regla": [
+                        0,
+                        "<=",
+                        65.5
+                    ],
+                    "etiqueta": "diseased",
+                    "impureza": 0.5916727785823275,
+                    "etiquetas": [
+                        "diseased",
+                        "diseased",
+                        "diseased",
+                        "diseased",
+                        "diseased",
+                        "not_diseased",
+                        "diseased"
+                    ],
+                    "muestras": 7,
+                    "izquierda": {
+                        "es_hoja": true,
+                        "regla": null,
+                        "etiqueta": "diseased",
+                        "impureza": -0.0,
+                        "etiquetas": [
+                            "diseased",
+                            "diseased",
+                            "diseased",
+                            "diseased",
+                            "diseased"
+                        ],
+                        "muestras": 5
+                    },
+                    "derecha": {
+                        "es_hoja": true,
+                        "regla": null,
+                        "etiqueta": "diseased",
+                        "impureza": 1.0,
+                        "etiquetas": [
+                            "diseased",
+                            "not_diseased"
+                        ],
+                        "muestras": 2
+                    }
+                }
+            },
+            "derecha": {
+                "es_hoja": false,
+                "regla": [
+                    0,
+                    "<=",
+                    46.5
+                ],
+                "etiqueta": "not_diseased",
+                "impureza": 0.8112781244591328,
+                "etiquetas": [
+                    "not_diseased",
+                    "not_diseased",
+                    "not_diseased",
+                    "not_diseased",
+                    "diseased",
+                    "not_diseased",
+                    "not_diseased",
+                    "diseased"
+                ],
+                "muestras": 8,
+                "izquierda": {
+                    "es_hoja": false,
+                    "regla": [
+                        2,
+                        "==",
+                        "Smoker"
+                    ],
+                    "etiqueta": "not_diseased",
+                    "impureza": 0.5916727785823275,
+                    "etiquetas": [
+                        "not_diseased",
+                        "not_diseased",
+                        "not_diseased",
+                        "not_diseased",
+                        "diseased",
+                        "not_diseased",
+                        "not_diseased"
+                    ],
+                    "muestras": 7,
+                    "izquierda": {
+                        "es_hoja": true,
+                        "regla": null,
+                        "etiqueta": "not_diseased",
+                        "impureza": 0.8112781244591328,
+                        "etiquetas": [
+                            "not_diseased",
+                            "not_diseased",
+                            "diseased",
+                            "not_diseased"
+                        ],
+                        "muestras": 4
+                    },
+                    "derecha": {
+                        "es_hoja": true,
+                        "regla": null,
+                        "etiqueta": "not_diseased",
+                        "impureza": -0.0,
+                        "etiquetas": [
+                            "not_diseased",
+                            "not_diseased",
+                            "not_diseased"
+                        ],
+                        "muestras": 3
+                    }
+                },
+                "derecha": {
+                    "es_hoja": true,
+                    "regla": null,
+                    "etiqueta": "diseased",
+                    "impureza": -0.0,
+                    "etiquetas": [
+                        "diseased"
+                    ],
+                    "muestras": 1
+                }
+            }
+        }
+    }
+}

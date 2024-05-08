@@ -49,8 +49,15 @@ class TreePersistence:
         del objeto tree y guarda este diccionario en un archivo JSON especificado por filename.
         """
         tree_dict = tree.get_tree()
+
+        # Convertir numpy.int64 a int
+        def convert_np_int64(obj):
+            if isinstance(obj, np.int64):
+                return int(obj)
+            raise TypeError
+
         with open(filename, 'w') as f:
-            json.dump(tree_dict, f, indent=4) # Este método de la librería JSON guarda el diccionario de los nodos y sus hijos en archivo JSON.
+            json.dump(tree_dict, f, indent=4, default=convert_np_int64)
     
     @staticmethod
     def load_tree(filename):
