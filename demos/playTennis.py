@@ -22,8 +22,9 @@
        Horario: 1pm
 """
 # --------------------------------------------------------------------------------- #
-# --------------------------------------------------------------------------------- #
 """
+-----------------------SCRIPT playTennis SCIKITTY----------------------------
+
     Este script demuestra el uso de varias funcionalidades en el módulo Scikitty:
     - Cargar un dataset.
     - Preparar y dividir los datos en conjuntos de entrenamiento y prueba.
