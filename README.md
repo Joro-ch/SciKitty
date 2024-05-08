@@ -1,7 +1,7 @@
 # Scikitty
 
 ## 1) Descripción del sprint #1 del proyecto
-En el siguiente sprint se podrán observar la primera parte de la implementación y la creación del modelo de árbol de decisión para variables categóricas binarias. En donde se busca poder entrenar y regular (por medio de hiperparámetros) un modelo por medio de un dataset y mediante variables de testeo poder observar las decisiones tomadas por medio del árbol, además de poder serializar el árbol en un documento .json. 
+En el siguiente sprint se podrán observar la primera parte de la implementación y la creación del modelo de árbol de decisión para variables categóricas multiclase, continuas y binarias. En donde se busca poder entrenar y regular (por medio de hiperparámetros) un modelo por medio de un dataset y mediante variables de testeo poder observar las decisiones tomadas por medio del árbol, además de poder serializar el árbol en un documento .json. 
 
 ## 2) Ambiente:
 Este proyecto se deberá de correr desde el prompt Anaconda, en donde se deberá de tener instalado las librerias graphviz, pandas y numpy. Siguiendo los siguientes pasos, se prepará el ambiente para poder utilizar las demos del proyecto:
@@ -110,7 +110,7 @@ Se mostrará los datos del árbol entrenado original y una vez que se cree el ar
 * **Visaulización del árbol recuperado:** Se visualizará el árbol recuperado por medio del archivo JSON, se mostrará en un png emergente con el respectivo grafico del árbol.
 
 **SCI-KIT LEARN**
-Se mostrarán los mismos datos que en el caso de SCI-KITTY. Para visualizar el árbol se usará la librería de Matplotlib.
+Se mostrarán los mismos datos que en el caso de SCI-KITTY exceptuando el árbol cargado. Para visualizar el árbol se usará la librería de Matplotlib.
 
 ## 6) Hiperparámetros
 En caso de querer cambiar los hiperparámetros, se tendrá que modificar directamente el archivo a ejecutar en donde se podrán reconocer las variables:
