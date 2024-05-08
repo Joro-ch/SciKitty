@@ -52,13 +52,22 @@ class DecisionTree:
         # Inicializa el árbol de decisión con los parámetros dados.
         self.caracteristicas = np.array(caracteristicas)
         self.etiquetas = np.array(etiquetas)
-        self.nombres_caracteristicas = caracteristicas.columns.tolist() if isinstance(caracteristicas,
-        pd.DataFrame) else [f'Característica[{i}]' for i in range(np.array(caracteristicas).shape[1])]
+        if len(caracteristicas) > 0:
+            self.nombres_caracteristicas = caracteristicas.columns.tolist() if isinstance(caracteristicas,
+            pd.DataFrame) else [f'Característica[{i}]' for i in range(np.array(caracteristicas).shape[1])]
+        else: self.nombres_caracteristicas = []
         self.criterio = criterio
         self.min_muestras_div = min_muestras_div
         self.max_profundidad = max_profundidad
         self.raiz = None
         self.etiquetas_originales = np.unique(etiquetas)
+
+    @classmethod
+    def generar_arbol (cls, raiz):
+        arbol= cls([],[])
+        arbol.raiz=raiz
+        return arbol
+        
 
     def is_balanced(self, umbral=0.5):
         """
@@ -195,7 +204,6 @@ class DecisionTree:
                 continue
 
             for valor in valores_unicos:
-                # Concepto que el profe vio ayer en clase
                 # Se crea una máscara booleana para las características con el mismo valor
                 mascara_division = caracteristica == valor
                 etiquetas_divididas = etiquetas[mascara_division]
@@ -306,6 +314,8 @@ class DecisionTree:
         indice_columna, condicion, valor = regla
         # Comprueba si la característica cumple con la regla a seguir
         return caracteristica[indice_columna] == valor if condicion == '==' else caracteristica[indice_columna] != valor
+        
+
 
     def imprimir_arbol(self, nodo=None, profundidad=0, condicion="Raíz"):
         """

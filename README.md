@@ -8,7 +8,7 @@ Este proyecto se deberá de correr desde el prompt Anaconda, en donde se deberá
 ```
 pip install numpy
 pip install pandas
-pip install graphviz
+conda install graphviz
 ```
 ### 3) Dataset
 
@@ -24,7 +24,7 @@ Sin embargo para este proyecto sólo se tomarán las características categóric
 ### 4) ¿Cómo ejecutar el proyecto?
 Para poder ejecuta cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
 * Abrir Anaconda prompt
-* Se debe de ubicar en el directorio 'scripts' del proyecto, en donde se encuentran los scripts correspondiente a cada uno de los dataset. Para poder ejecutar cada uno de ellos, es necesario colocar los siguientes comandos:
+* Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando cd, en donde se encuentran los scripts correspondiente a cada uno de los dataset. Para poder ejecutar cada uno de ellos, es necesario colocar los siguientes comandos:
 
 * Para poder ejecutar el árbol de decisión de fictional_disease.csv: 
 ```
@@ -38,8 +38,7 @@ python fictional_reading_place.py
 ```
 python playTennis.py
 ```
-En el caso de poder compararlo con las salidas de la librería de Scikit Learn, puede ejecutar los siguientes scripts,
-para comparar los resultados de las dos librerias:
+En el caso de poder compararlo con las salidas de la librería de Scikit Learn, puede ejecutar los siguientes scripts, para comparar los resultados de las dos librerias:
 
 * Para poder ejecutar el resultado de scikitlearn del dataset fictional_disease.csv: 
 ```
