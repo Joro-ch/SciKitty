@@ -68,7 +68,6 @@ dt.fit(X_train, y_train)
 plt.figure(figsize=(10,6))
 plot_tree(dt, feature_names=encoder.get_feature_names_out().tolist(), class_names=dt.classes_.tolist(), filled=True)
 plt.savefig(f'{file_name}_tree-scikitlearn.png')
-plt.show()
 
 # Imprimir resultados
 y_pred = dt.predict(X_test)
@@ -89,3 +88,4 @@ print(conf_matrix)
 print("Predicted Labels:", y_pred)
 print("Actual Labels:", y_test.tolist())
 print("\nVisualizando el árbol de Sci-Kit Learn...\n")
+plt.show()
