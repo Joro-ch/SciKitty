@@ -79,7 +79,6 @@ X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=
 
 # Crear e instanciar el árbol de decisión
 dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
-print(X_train)
 dt.fit()
 
 # Visualizar el árbol
@@ -97,6 +96,7 @@ recall = puntuacion_de_recall(y_test, y_pred, average='weighted')
 f1 = puntuacion_de_f1(y_test, y_pred, average='weighted')
 conf_matrix = matriz_de_confusion(y_test, y_pred)
 
+print("\n------------------------------ ARBOL ORIGINAL SCIKITTY ------------------------------\n")
 print("Exactitud:", accuracy)
 print("Precisión:", precision)
 print("Recall:", recall)
@@ -105,6 +105,7 @@ print("Matriz de confusión:")
 print(conf_matrix)
 print("Predicted Labels:", y_pred)
 print("Actual Labels:", y_test.tolist())
+print("\nVisualizando el árbol original...\n")
 
 # Guardar el árbol en un archivo JSON
 TreePersistence.save_tree(dt, 'playTennis.json')
@@ -130,6 +131,7 @@ nuevo_recall = puntuacion_de_recall(y_test, nuevo_y_pred, average='weighted')
 nuevo_f1 = puntuacion_de_f1(y_test, nuevo_y_pred, average='weighted')
 nuevo_conf_matrix = matriz_de_confusion(y_test, nuevo_y_pred)
 
+print("\n------------------------------ ARBOL CARGADO SCIKITTY ------------------------------\n")
 print("Exactitud (nuevo árbol):", nuevo_accuracy)
 print("Precisión (nuevo árbol):", nuevo_precision)
 print("Recall (nuevo árbol):", nuevo_recall)
@@ -138,3 +140,4 @@ print("Matriz de confusión (nuevo árbol):")
 print(nuevo_conf_matrix)
 print("Predicted Labels (nuevo árbol):", nuevo_y_pred)
 print("Actual Labels:", y_test.tolist())
+print("\nVisualizando el árbol cargado desde el archivo JSON...\n")
