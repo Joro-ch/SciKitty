@@ -1,47 +1,59 @@
-from graphviz import Digraph
+import graphviz
 
 class TreeVisualizer:
     def __init__(self):
         """
-        Inicializa un objeto Digraph de Graphviz para visualizar el árbol de decisión
+            Inicializa un objeto Graphviz Digraph para visualizar el árbol de decisión
         """
-        self.grafo = Digraph(comment='Árbol de Decisión')
+        self.grafo = graphviz.Digraph(format='png')
 
-    def graph_tree(self, estructura_arbol, padre=None, etiqueta_arista=''):
+    def graph_tree(self, estructura_arbol, padre=None, etiqueta_arista='', nivel=0, posicion=0):
         """
-        Método recursivo para graficar el árbol de decisión a partir de su estructura
+            Método recursivo para graficar el árbol de decisión a partir de su estructura utilizando Graphviz
         """
         if estructura_arbol['tipo'] == 'Hoja':
-            # Si es un nodo hoja, establece la etiqueta del nodo como "Hoja: <etiqueta>"
-            etiqueta_nodo = f"Hoja: {estructura_arbol['etiqueta']}"
-            nombre_nodo = f"hoja_{id(estructura_arbol)}"  # Nombre único para el nodo de hoja
+            nombre_nodo = f"hoja_{id(estructura_arbol)}"
+            color = 'lightgreen'
         else:
-            # Si es un nodo de decisión, establece la etiqueta del nodo como la regla de decisión
-            etiqueta_nodo = estructura_arbol['regla']
-            nombre_nodo = f"decision_{id(estructura_arbol)}"  # Nombre único para el nodo de decisión
+            nombre_nodo = f"decision_{id(estructura_arbol)}"
+            color = 'lightblue'
+            self.graph_tree(estructura_arbol['izquierda'], 
+                            padre=nombre_nodo, 
+                            etiqueta_arista='True', 
+                            nivel=nivel+1, 
+                            posicion=posicion-1)
+            self.graph_tree(estructura_arbol['derecha'], 
+                            padre=nombre_nodo, 
+                            etiqueta_arista='False', 
+                            nivel=nivel+1, 
+                            posicion=posicion+1)
 
-            # Recursivamente grafica los subárboles izquierdo y derecho
-            self.graph_tree(estructura_arbol['izquierda'], padre=nombre_nodo, etiqueta_arista='Verdadero')
-            self.graph_tree(estructura_arbol['derecha'], padre=nombre_nodo, etiqueta_arista='Falso')
-
+        etiqueta_nodo = self.formato_etiqueta(estructura_arbol)
+        self.grafo.node(nombre_nodo, label=etiqueta_nodo, shape='box', style='filled', fillcolor=color)
         if padre:
-            # Agrega el nodo actual al grafo y una conexión desde el nodo padre
-            self.grafo.node(nombre_nodo, label=etiqueta_nodo)
             self.grafo.edge(padre, nombre_nodo, label=etiqueta_arista)
-        else:
-            # Si es la raíz del árbol, establece la forma del nodo como 'box' y establece como texto el nombre de la etiqueta predicha (target).
-            self.grafo.node(nombre_nodo, label=etiqueta_nodo, shape='box')
+
+    def formato_etiqueta(self, nodo):
+        """
+            Crea una etiqueta formateada con los detalles del nodo centrados y en líneas separadas.
+            Divide el texto de 'regla' en líneas individuales y las muestra como etiquetas del nodo.
+        """
+        # Extrae la cadena de regla y divide en líneas separadas.
+        regla_completa = nodo.get('regla', "")
+        lineas_regla = regla_completa.strip().split('\n')
+        
+        # Formatea cada línea para asegurarse de que no haya espacios extraños ni líneas vacías.
+        lineas_limpas = [linea.strip() for linea in lineas_regla if linea.strip()]
+        
+        # Junta todas las líneas limpias en una única cadena, separando cada una por un salto de línea.
+        etiqueta_nodo = "\n".join(lineas_limpas)
+        
+        return etiqueta_nodo
 
     def get_graph(self, nombre_archivo='arbol', ver=True):
         """
-        Renderiza el grafo como un archivo de imagen (por defecto, formato PNG)
+            Renderiza el grafo como un archivo de imagen y muestra el grafo.
         """
-        self.grafo.render(nombre_archivo, view=ver, format='png')
+        self.grafo.render(nombre_archivo, view=ver)
 
-"""
-Explicación de uso:
-TreeVisualizer es una clase diseñada para visualizar árboles de decisión utilizando Graphviz.
-El método __init__ inicializa un objeto Digraph de Graphviz con un comentario especificado.
-El método graph_tree toma la estructura del árbol y genera un grafo que representa el árbol de manera recursiva.
-El método get_graph guarda el grafo como un archivo de imagen y lo muestra si se especifica 'view=True'.
-"""
+# Crear y utilizar el visualizador sería igual que antes, proporcionando la estructura correcta del árbol.
