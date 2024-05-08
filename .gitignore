@@ -1,6 +1,18 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
+## Imagenes de Scitty
+
+fictional_disease_tree
+fictional_disease_tree-scikitlearn.png
+fictional_disease_tree.png
+fictional_reading_place_tree
+fictional_reading_place_tree-scikitlearn.png
+fictional_reading_place_tree.png
+playTennis_tree
+playTennis_tree-scikitlearn.png
+playTennis_tree.png
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
