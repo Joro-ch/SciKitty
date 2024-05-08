@@ -68,7 +68,7 @@ python playTennis.py
 ```
 python CO2_car_emision.py
 ```
-En el caso de querer compararlo con las salidas de la librería de **Scikit Learn**, puede ejecutar los siguientes scripts, para comparar los resultados de las dos librerias:
+En el caso de querer compararlo con las salidas de la librería de **Scikit Learn**, puede ejecutar los siguientes scripts, para comparar los resultados de las dos librerias. Tener en cuenta que los siguientes scripts utilizan la libreria Matplotlib para realizar la grafica del árbol, esto genera que hasta que no se cierre la ventana emergente del grafico del árbol, el flujo de la consola de Anaconda no sigue.
 
 * Para poder ejecutar el resultado de **scikitlearn del dataset fictional_disease.csv: **
 ```
