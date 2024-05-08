@@ -42,7 +42,7 @@ labels = data['Play Tennis']
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el árbol de decisión
-dt = DecisionTree(X_train, y_train, criterio='Entropy', min_muestras_div=2, max_profundidad=5)
+dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
 dt.fit()
 
 # Visualizar el árbol

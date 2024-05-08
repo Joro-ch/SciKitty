@@ -30,7 +30,7 @@ class Nodo:
         return f"Hoja: {self.etiqueta}" if self.es_hoja else f"Regla: {self.regla}"
 
 class DecisionTree:
-    def __init__(self, caracteristicas, etiquetas, criterio='Entropía', min_muestras_div=2, max_profundidad=None):
+    def __init__(self, caracteristicas, etiquetas, criterio='entropy', min_muestras_div=2, max_profundidad=None):
         """
             Definición del algoritmo de aprendizaje automático "Árbol de Decisión". La idea es construir un árbol donde 
             los nodos son preguntas o reglas sobre alguna característica del conjunto de datos (DS), dichas reglas,
@@ -277,9 +277,9 @@ class DecisionTree:
 
         if not (es_binaria or es_categorica):
             return self._calcular_mse(etiquetas)
-        elif self.criterio == 'Entropy':
+        elif self.criterio == 'entropy':
             return self._calcular_entropia(etiquetas)
-        else:
+        elif self.criterio == 'gini':
             return self._calcular_gini(etiquetas)
 
     def _calcular_entropia(self, etiquetas):
