@@ -79,34 +79,41 @@ X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=
 dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
 dt.fit()
 
-# Visualizar el árbol.
-tree_structure = dt.get_tree_structure()
-visualizer = TreeVisualizer()
-visualizer.graph_tree(tree_structure)
-visualizer.get_graph(f'{file_name}_tree', ver=True)
+# ---------------------------------------------------------
 
-# Imprimir resultados.
-y_pred = dt.predict(X_test)
+def test_tree(dt, file_name, X_test, y_test):
+   # Visualizar el árbol.
+   tree_structure = dt.get_tree_structure()
+   visualizer = TreeVisualizer()
+   visualizer.graph_tree(tree_structure)
+   visualizer.get_graph(f'{file_name}_tree', ver=True)
 
-# Se calculan las metricas.
-accuracy = puntuacion_de_exactitud(y_test, y_pred)
-precision = puntuacion_de_precision(y_test, y_pred, average='weighted')
-recall = puntuacion_de_recall(y_test, y_pred, average='weighted')
-f1 = puntuacion_de_f1(y_test, y_pred, average='weighted')
-conf_matrix = matriz_de_confusion(y_test, y_pred)
+   # Imprimir resultados.
+   y_pred = dt.predict(X_test)
 
-# Se imprimen los resultados por consola.
-print("\n------------------------------ ARBOL ORIGINAL SCIKITTY ------------------------------\n")
-print("¿El árbol es balanceado?", dt.is_balanced())
-print("Exactitud:", accuracy)
-print("Precisión:", precision)
-print("Recall:", recall)
-print("F1-score:", f1)
-print("Matriz de confusión:")
-print(conf_matrix)
-print("Etiquetas predichas:", y_pred)
-print("Etiquetas reales:", y_test.tolist())
-print("\nVisualizando el árbol original...\n")
+   # Se calculan las metricas.
+   accuracy = puntuacion_de_exactitud(y_test, y_pred)
+   precision = puntuacion_de_precision(y_test, y_pred, average='weighted')
+   recall = puntuacion_de_recall(y_test, y_pred, average='weighted')
+   f1 = puntuacion_de_f1(y_test, y_pred, average='weighted')
+   conf_matrix = matriz_de_confusion(y_test, y_pred)
+
+   # Se imprimen los resultados por consola.
+   print("\n------------------------------ ARBOL ORIGINAL SCIKITTY ------------------------------\n")
+   print("¿El árbol es balanceado?", dt.is_balanced())
+   print("Exactitud:", accuracy)
+   print("Precisión:", precision)
+   print("Recall:", recall)
+   print("F1-score:", f1)
+   print("Matriz de confusión:")
+   print(conf_matrix)
+   print("Etiquetas predichas:", y_pred)
+   print("Etiquetas reales:", y_test.tolist())
+   print("\nVisualizando el árbol original...\n")
+
+# ---------------------------------------------------------
+
+test_tree(dt, file_name, X_test, y_test)
 
 # Guardar el árbol en un archivo JSON
 TreePersistence.save_tree(dt, f'{file_name}.json')
@@ -116,31 +123,4 @@ nueva_raiz = TreePersistence.load_tree(f'{file_name}.json')
 nuevo_dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
 nuevo_dt.set_tree(nueva_raiz)
 
-# Visualizar el árbol cargado
-nuevo_tree_structure = nuevo_dt.get_tree_structure()
-nuevo_visualizer = TreeVisualizer()
-nuevo_visualizer.graph_tree(nuevo_tree_structure)
-nuevo_visualizer.get_graph(f'{file_name}_loaded_tree', ver=True)
-
-# Imprimir resultados del árbol cargado.
-nuevo_y_pred = nuevo_dt.predict(X_test)
-
-# Se calculan las metricas.
-nuevo_accuracy = puntuacion_de_exactitud(y_test, nuevo_y_pred)
-nuevo_precision = puntuacion_de_precision(y_test, nuevo_y_pred, average='weighted')
-nuevo_recall = puntuacion_de_recall(y_test, nuevo_y_pred, average='weighted')
-nuevo_f1 = puntuacion_de_f1(y_test, nuevo_y_pred, average='weighted')
-nuevo_conf_matrix = matriz_de_confusion(y_test, nuevo_y_pred)
-
-# Se imprimen los resultados por consola.
-print("\n------------------------------ ARBOL CARGADO SCIKITTY ------------------------------\n")
-print("¿El árbol es balanceado?", nuevo_dt.is_balanced())
-print("Exactitud (nuevo árbol):", nuevo_accuracy)
-print("Precisión (nuevo árbol):", nuevo_precision)
-print("Recall (nuevo árbol):", nuevo_recall)
-print("F1-score (nuevo árbol):", nuevo_f1)
-print("Matriz de confusión (nuevo árbol):")
-print(nuevo_conf_matrix)
-print("Etiquetas predichas (nuevo árbol):", nuevo_y_pred)
-print("Etiquetas reales:", y_test.tolist())
-print("\nVisualizando el árbol cargado desde el archivo JSON...\n")
+test_tree(nuevo_dt, file_name, X_test, y_test)
