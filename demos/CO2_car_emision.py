@@ -73,7 +73,11 @@ labels = data['CO2']
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el árbol de decisión.
-dt = DecisionTree(X_train, y_train, criterio='entropy', min_muestras_div=2, max_profundidad=5)
+criterio_impureza = 'entropy'
+min_muestras_div = 2
+max_profundidad = 5
+dt = DecisionTree(X_train, y_train, criterio=criterio_impureza, 
+                  min_muestras_div=min_muestras_div, max_profundidad=max_profundidad)
 dt.fit()
 
 # ---------------------------------------------------------
@@ -117,7 +121,8 @@ TreePersistence.save_tree(dt, f'{file_name}.json')
 
 # Cargar el árbol desde el archivo JSON
 nueva_raiz = TreePersistence.load_tree(f'{file_name}.json')
-nuevo_dt = DecisionTree(X_train, y_train, criterio='gini', min_muestras_div=2, max_profundidad=5)
+nuevo_dt = DecisionTree(X_train, y_train, criterio=criterio_impureza, 
+                        min_muestras_div=min_muestras_div, max_profundidad=max_profundidad)
 nuevo_dt.set_tree(nueva_raiz)
 
 test_tree(nuevo_dt, file_name, X_test, y_test)
