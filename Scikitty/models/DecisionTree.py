@@ -602,17 +602,17 @@ class DecisionTree:
 
                 for punto in puntos_medios:
                     mascara_division = caracteristica <= punto
-                    impureza = self._calcular_impureza_division(
-                        etiquetas, mascara_division)
+                    impureza = round(self._calcular_impureza_division(
+                        etiquetas, mascara_division), 5)
 
-                    if impureza <= mejor_impureza:
+                    if impureza < mejor_impureza:
                         mejor_impureza = impureza
                         mejor_regla = (indice, '<=', punto)
             else:
                 for valor in valores_unicos:
                     mascara_division = caracteristica == valor
-                    impureza = self._calcular_impureza_division(
-                        etiquetas, mascara_division)
+                    impureza = round(self._calcular_impureza_division(
+                        etiquetas, mascara_division), 5)
 
                     if impureza < mejor_impureza:
                         mejor_impureza = impureza
