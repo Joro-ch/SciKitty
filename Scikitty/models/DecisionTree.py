@@ -22,6 +22,7 @@
        Horario: 1pm
 """
 # --------------------------------------------------------------------------------- #
+
 import numpy as np
 import pandas as pd
 
@@ -167,6 +168,9 @@ class DecisionTree:
         etiquetas_originales: atributo que almacena las etiquetas unicas del "y_train" del árbol. Utilizado para comprobar
         si se trata de un split izquierdo o derecho a la hora de graficar los "valores" de cada nodo.
 
+        criterio_continuo: atributo que indica cuál es el criterio que se utilizará para calcular la impureza de los datos
+        de un split dado cuando los datos son continuos.
+
         Ejemplos
         --------
         >>> from Scikitty.models.DecisionTree import DecisionTree
@@ -192,7 +196,7 @@ class DecisionTree:
 
 
     # Función de construcción de la clase DecisionTree.
-    def __init__(self, caracteristicas, etiquetas, criterio='entropy', min_muestras_div=2, max_profundidad=None):
+    def __init__(self, caracteristicas, etiquetas, criterio='entropy', min_muestras_div=2, max_profundidad=None, criterio_continuo='MSE'):
         """
             El árbol recibirá una lista de características que dividirá en los nombres de dichas características y sus
             valores, además de las etiquetas correctas a predict en estructuras de numpy.
@@ -232,6 +236,16 @@ class DecisionTree:
 
         # Atributo que almacena las etiquetas originales o las etiquetas unicas del y_train.
         self.etiquetas_originales = np.unique(etiquetas)
+
+        # Atributo que almacena el criterio continuo.
+        self.criterio_continuo = criterio_continuo
+
+        # Inicializar estructuras para atributos categóricos/binarios y continuos
+        self.atributos_binarios_categoricos = []
+        self.atributos_continuos = []
+
+        # Clasificar atributos en categoricos/binarios-continuos al inicio del árbol
+        self._clasificar_atributos()
 
 
     def get_tree(self, nodo=None):
@@ -407,6 +421,29 @@ class DecisionTree:
         self.raiz = self._construir_arbol(self.caracteristicas, self.etiquetas, 0)
 
 
+    def _clasificar_atributos(self):
+        """
+            Clasifica los atributos en continuos y categóricos/binarios al inicio del entrenamiento del árbol.
+
+            Parametros
+            ----------
+            Función sin parametros. Utiliza los atributos propios del árbol. 
+            
+            Ejemplos
+            --------
+            >>> ...
+            >>> # Clasificar Atributos es una función interna de DecisionTree. No debe ser utilizada fuera de la clase.
+            >>> self._clasificar_atributos()
+            >>> ...
+        """
+        for i, nombre in enumerate(self.nombres_caracteristicas):
+            valores_unicos = np.unique(self.caracteristicas[:, i])
+            if len(valores_unicos) <= 2 or isinstance(valores_unicos[0], str):
+                self.atributos_binarios_categoricos.append(i)
+            else:
+                self.atributos_continuos.append(i)
+
+
     def _construir_arbol(self, caracteristicas, etiquetas, profundidad_actual):
         """
             Valida si se debe seguir dividiendo el conjunto de datos, en caso afirmativo, busca la mejor regla de
@@ -566,7 +603,7 @@ class DecisionTree:
 
     def _elegir_mejor_regla(self, caracteristicas, etiquetas):
         """
-            Encuentra la regla que genera la menor impureza respecto a las etiquetas a predecir.
+            Encuentra la regla que genera la menor impureza respecto a las etiquetas a predict.
 
             Parameters
             ----------
@@ -584,40 +621,35 @@ class DecisionTree:
         """
         mejor_impureza = float('inf')
         mejor_regla = None
-        lista_caracteristicas = caracteristicas.T
 
-        for indice, caracteristica in enumerate(lista_caracteristicas):
-
-            # Se guardan la cantidad de cada caracterítica.
+        # Iterar sobre atributos categóricos/binarios
+        for indice in self.atributos_binarios_categoricos:
+            caracteristica = caracteristicas[:, indice]
             valores_unicos = np.unique(caracteristica)
+            for valor in valores_unicos:
+                mascara_division = caracteristica == valor
+                impureza = self._calcular_impureza_division(
+                    etiquetas, mascara_division)
+                if impureza < mejor_impureza:
+                    mejor_impureza = impureza
+                    mejor_regla = (indice, '==', valor)
 
-            # Verifica si la característica es binaria o categórica.
-            es_binaria = len(valores_unicos) <= 2
-            es_categorica = isinstance(
-                caracteristica[0], str) and len(valores_unicos) > 2
+        # Iterar sobre atributos continuos
+        for indice in self.atributos_continuos:
+            caracteristica = caracteristicas[:, indice]
+            valores_unicos = np.unique(caracteristica)
+            valores_ordenados = np.sort(valores_unicos)
+            puntos_medios = (valores_ordenados[:-1] + valores_ordenados[1:]) / 2
+            for punto in puntos_medios:
+                mascara_division = caracteristica <= punto
+                impureza = self._calcular_impureza_division(
+                    etiquetas, mascara_division)
+                if impureza < mejor_impureza:
+                    mejor_impureza = impureza
+                    mejor_regla = (indice, '<=', punto)
 
-            if not (es_binaria or es_categorica):
-                valores_ordenados = np.sort(valores_unicos)
-                puntos_medios = (valores_ordenados[:-1] + valores_ordenados[1:]) / 2
-
-                for punto in puntos_medios:
-                    mascara_division = caracteristica <= punto
-                    impureza = round(self._calcular_impureza_division(
-                        etiquetas, mascara_division), 5)
-
-                    if impureza < mejor_impureza:
-                        mejor_impureza = impureza
-                        mejor_regla = (indice, '<=', punto)
-            else:
-                for valor in valores_unicos:
-                    mascara_division = caracteristica == valor
-                    impureza = round(self._calcular_impureza_division(
-                        etiquetas, mascara_division), 5)
-
-                    if impureza < mejor_impureza:
-                        mejor_impureza = impureza
-                        mejor_regla = (indice, '==', valor)
         return mejor_regla, mejor_impureza
+
 
     def _dividir(self, caracteristicas, regla):
         """
@@ -689,11 +721,18 @@ class DecisionTree:
         # Dependiento del "es_binaria" o "es_categorica" y del críterio del árbol
         # se calcula la impureza con un críterio diferente.
         if not (es_binaria or es_categorica):
-            return self._calcular_mse(etiquetas)
-        elif self.criterio == 'entropy':
-            return self._calcular_entropia(etiquetas)
-        elif self.criterio == 'gini':
-            return self._calcular_gini(etiquetas)
+            if isinstance(self.criterio_continuo, str):
+                if self.criterio_continuo == 'MSE':
+                    return self._calcular_mse(etiquetas)
+            else:
+                return self.criterio_continuo(etiquetas)
+        elif isinstance(self.criterio, str):
+            if self.criterio == 'entropy':
+                return self._calcular_entropia(etiquetas)
+            elif self.criterio == 'gini':
+                return self._calcular_gini(etiquetas)
+        else:
+            return self.criterio(etiquetas)
 
     def _calcular_entropia(self, etiquetas):
         """
@@ -992,10 +1031,16 @@ class DecisionTree:
 
         # Muestra MSE si el atributo es continuo y el criterio especificado por el usuario en la creación de DT si
         # el atributo es binario o categórico multiclase.
-        if es_continua: 
-              criterio_a_mostrar = f"MSE: {round(nodo.impureza, 3)}"
+        if es_continua:
+            if isinstance(self.criterio_continuo, str):
+                criterio_a_mostrar = f"MSE: {round(nodo.impureza, 3)}"
+            else:
+                criterio_a_mostrar = f"{self.criterio_continuo.__name__}: {round(nodo.impureza, 3)}"
         else:
+            if isinstance(self.criterio, str):
                 criterio_a_mostrar = f"{self.criterio}:{round(nodo.impureza, 3)}"
+            else:
+                criterio_a_mostrar = f"{self.criterio.__name__}:{round(nodo.impureza, 3)}"
                 
         # Se comprueba la cantidad de valores para graficar diferente los values de cada nodo.
         valor = f"[{', '.join(str(cuenta[np.where(etiquetasUnicas == etiqueta)[0][0]]) if etiqueta in etiquetasUnicas else '0' for etiqueta in self.etiquetas_originales)}]"
@@ -1009,7 +1054,6 @@ class DecisionTree:
             # Se comprueba que sea mayor a "-0.0" para establecer el valor en 0 si no es el caso.
             if numeroImpureza <= -0.0:
                 numeroImpureza = 0
-
             # Guarda la información relevante del nodo.
             return {
                 "tipo": "Hoja", 
@@ -1033,3 +1077,4 @@ class DecisionTree:
                 "valor": f"valor: {valor}",
                 "clase": f"clase: {nodo.etiqueta}",
             }
+
