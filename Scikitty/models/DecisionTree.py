@@ -131,6 +131,9 @@ class Nodo:
             >>> nodo._etiqueta_mas_comun(etiquetas=etiquetas)
         """
 
+        if len(etiquetas) == 0:
+            return None  # Si no hay etiquetas, retornar None o un valor indicativo
+
         # Se crea un array que contiene la cantidad de conteos de cada etiqueta.
         valores, conteos = np.unique(etiquetas, return_counts=True)
 

@@ -16,6 +16,10 @@ class Nodo:
         return f"Hoja: {self.etiqueta}" if self.es_hoja else f"Regla: {self.regla}"
     
     def _etiqueta_mas_comun(self, etiquetas):
+
+        if len(etiquetas) == 0:
+            return None  # Si no hay etiquetas, retornar None o un valor indicativo
+
         valores, conteos = np.unique(etiquetas, return_counts=True)
         return valores[np.argmax(conteos)]
 
