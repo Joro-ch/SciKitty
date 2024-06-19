@@ -68,8 +68,8 @@ labels = data['Play Tennis']
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
 # Crear e instanciar el modelo de boosting.
-n_estimators = 200
-learning_rate = 0.1
+n_estimators = 4
+learning_rate = 0.05
 criterio_impureza = 'entropy'
 criterio_continuo = 'MSE'
 tb = TreeBoosting(n_estimators=n_estimators, learning_rate=learning_rate, criterio=criterio_impureza, criterio_continuo=criterio_continuo)
