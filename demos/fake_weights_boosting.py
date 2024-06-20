@@ -6,7 +6,7 @@
        Correo: john.rojas.chinchilla@est.una.ac.cr
        Horario: 1pm
 
-    2) Nombre: Abigail Salas
+    2) Nombre: Abigail Salas Ramirez
        ID: 402570890
        Correo: abigail.salas.ramirez@est.una.ac.cr
        Horario: 1pm

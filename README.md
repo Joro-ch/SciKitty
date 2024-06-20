@@ -1,7 +1,7 @@
 # Scikitty
 
-## 1) Descripción del sprint #1 del proyecto
-En el siguiente sprint se podrán observar la primera parte de la implementación y la creación del modelo de árbol de decisión para variables categóricas multiclase, continuas y binarias. En donde se busca poder entrenar y regular (por medio de hiperparámetros) un modelo por medio de un dataset y mediante variables de testeo poder observar las decisiones tomadas por medio del árbol, además de poder serializar el árbol en un documento .json. 
+## 1) Descripción del sprint #2 del proyecto
+En el siguiente sprint se podrán observar la continuación de la implementación y la creación del modelo de árbol de decisión para variables categóricas multiclase, continuas y binarias. Además de la implementación del un modelo de Tree Gradient Decisition Boosting 
 
 ## 2) Ambiente:
 Este proyecto se deberá de correr desde el prompt Anaconda, en donde se deberá de tener instalado las librerias graphviz, pandas y numpy. Siguiendo los siguientes pasos, se prepará el ambiente para poder utilizar las demos del proyecto:
@@ -22,33 +22,39 @@ conda install numpy
 Proceed ([y]/n)?
 ```
 Es importante introduccir **"y"** y presionar la tecla intro para poder instalar las versiones más nuevas y dependencias necesarias de cada uno de los paquetes a instalar.
-## 3) Datasets
 
-En este proyecto se estarán utilizando diferentes datasets. Para temas del primer seguimiento se estarán utilizando tres en específicos:
-1. **fictional_disease.csv:**
-* **Target:** Disease.
-* **Características:** Age, Gender, SmokerHistory.
+## 3) Datasets
+En este proyecto se estarán utilizando diferentes datasets. 
+**1. fictional_disease.csv:**
+
 El modelo busca predecir si una persona es enferma o no, por medio de características como la edad, el género y su historial de fumador.
 
-2. **fictional_reading_place.csv:** 
-* **Target:** User action.
-* **Características:** Author, Thread, Length, Where read.
+* **Target:** Disease.
+* **Características:** Age, Gender, SmokerHistory.
+
+**2. fictional_reading_place.csv:** 
+
 El modelo busca predecir si un lector lee o se salta una lectura, según características como el autor, hilo, longitud y el lugar de lectura. 
 
-3. **playTennis.csv:** 
-* **Target:** Play Tennis.
-* **Características:** Outlook, Temperature, Humidity, Wind
+* **Target:** User action.
+* **Características:** Author, Thread, Length, Where read.
+
+
+**3. playTennis.csv:** 
+
 El modelo busca predecir si una persona juega o no tennis por medio de características como el pronóstico del clima, la temperatura, la humedad y el viento.
 
-El modelo creado para este proyecto tendrá la capacidad de poder validar las variables categóricas binarios, multiclase y continuas. Por lo que sí tomará en cuenta estas variables de los dataset y podrá tomar las desiciones en base a estas. En consecuencia se puede tomar en cuenta el siguiente dataset:
+* **Target:** Play Tennis.
+* **Características:** Outlook, Temperature, Humidity, Wind
 
-1. **CO2_car_emision.csv:**
+
+**4. CO2_car_emision.csv:**
 * **Target:** CO2.
 * **Características:** Car, Model, Volume, Weight.
 El modelo busca predecir la cantidad de CO2 que genera un automóvil, según marca, modelo, volumen y peso del automóvil.
 
 ## 4) ¿Cómo ejecutar el proyecto?
-Dentro de la carpeta raiz del proyecto **"Scikitty"**, se encontrá una carpeta llamada **"demos"**. Aquí se almacenan cada uno de los scripts con las demos para cada uno de los datasets planteados. Tanto su versión utilizando la libreria **"Scikitty"** como la versión utilizando **"Scikitlearn**. Para poder ejecuta cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
+Dentro de la carpeta raiz del proyecto **"Scikitty"**, se encontrá una carpeta llamada **"demos"**. Aquí se almacenan cada uno de los scripts con las demos para cada uno de los datasets planteados. Siendo estas las implementaciones de  **"Scikitty"**,  **"Scikitlearn**,  **"Boosting"**,  **"Linear Regression"** y  **"Logistic Regression"**. Para poder ejecutar cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
 1. Abrir Anaconda Prompt. 
 2. Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando **cd** en la consola de Anaconda Prompt, en donde se encuentran los scripts correspondiente a cada uno de los dataset. 
 3. Una vez ubicado en el directorio de las **'demos'**, se podrá ejecutar cada uno de los scripts. Es necesario colocar los siguientes comando para ejecutarlos:
@@ -107,22 +113,137 @@ Se mostrará los datos del árbol entrenado original y una vez que se cree el ar
 4. Impureza
 5. Etiquetas: Los valores de las muestras
 6. La cantidad de muestras
-* **Visaulización del árbol recuperado:** Se visualizará el árbol recuperado por medio del archivo JSON, se mostrará en un png emergente con el respectivo grafico del árbol.
+* **Visualización del árbol recuperado:** Se visualizará el árbol recuperado por medio del archivo JSON, se mostrará en un png emergente con el respectivo grafico del árbol.
 
 **SCI-KIT LEARN**
 Se mostrarán los mismos datos que en el caso de SCI-KITTY exceptuando el árbol cargado. Para visualizar el árbol se usará la librería de Matplotlib.
-
 ## 6) Hiperparámetros
 En caso de querer cambiar los hiperparámetros, se tendrá que modificar directamente el archivo a ejecutar en donde se podrán reconocer las variables:
 * **max_depth:** Recibirá el número máximo de profundidad que contendrá el árbol de decisión.
 * **min_samples_split:** Recibirá el número mínimo de ejemplares que debe de tener un nodo para poder generar un split.
 
 Estos hiperparámetros, tendrán que se remplazados los símbolos '?' y colocar el número que sea deseado. Con esto se podrán ajustar la generación del árbol de decisión:
-
 ```
 dt = DecisionTreeClassifier(criterion='entropy', min_samples_split=?, max_depth=?)
 	
 ```
+#Decision Tree Gradient Boosting (DTGB)
+La implementación de este modelo tiene como objetivo el entrenar diversos árboles débiles (altura 1) en donde cada uno de ellos obtiene los residuos del anterior, en donde se implementa el MSE (Error Promedio Cuadrático) y el GD (Descenso por gradiente) buscando mejorar los errores del árbol anterior, mejorando las predicciones, permitiendo crear un modelo fuerte.
+##1) Datasets
+En esta parte del proyecto se estarán utilizando algunos dataset ya antes mencionados para Scikitty. Para temas de boosting se estarán utilizando tres en específicos:
+
+**1. playTennis_boosting.csv:**
+
+El modelo busca predecir si una persona juega o no tennis por medio de características como el pronóstico del clima, la temperatura, la humedad y el viento.
+
+* **Target:** Play Tennis.
+* **Características:** Outlook, Temperature, Humidity, Wind
+
+**2. fake_weights_boosting.csv:** 
+
+El modelo busca predecir si 
+
+* **Target:** 
+* **Características:** .
+
+**3. fictional_disease.csv:**
+
+El modelo busca predecir si una persona es enferma o no, por medio de características como la edad, el género y su historial de fumador.
+
+* **Target:** Disease.
+* **Características:** Age, Gender, SmokerHistory.
+
+## 2) Ejecución del Decision Tree Gradient Boosting (DTGB)
+Para poder ejecutar cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
+1. Abrir Anaconda Prompt. 
+2. Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando **cd** en la consola de Anaconda Prompt, en donde se encuentran los scripts correspondiente a cada uno de los dataset. 
+3. Una vez ubicado en el directorio de las **'demos'**, se podrá ejecutar cada uno de los scripts. Es necesario colocar los siguientes comando para ejecutarlos:
+*   Para poder ejecutar el DTGB de ** playTennis_boosting.csv: **
+```
+python  playTennis_boosting.py
+```
+* Para poder ejecutar el  DTGB de **fake_weights_boosting.csv** 
+```
+python fake_weights_boosting.py
+```
+* Para poder ejecutar el  DTGB de **fictional_disease_boosting.csv: **
+```
+python fictional_disease_boosting.py
+```
+
+## 3) Salidas
+La salida esperada muestra los ciclos de entrenamiento que contiene el modelo, permitiendo observar los residuos y el mejoramiento de las predicciones. En donde cada stump mejora los errores del anterior por medio del descenso por gradiente, logrando acercarse al objetivo
+Las salidas esperadas para el DTGB serán:
+####Salida para variables categóricas y continuas
+* **Target continuo:**  True o False dependiendo de la naturaleza de este.
+* **Target a predecir en fit:**  Muestra las etiquetas verdaderas para el conjunto de entrenamiento
+* **Regla Inicial del Stump:** Se muestran feature inicial donde se especifica el número del feature, la operación y el valor. En el caso de las variables continuas se escoge el de mayor probabilidad
+* **Inicialización de probabilidades de clase:** En el caso de las categoricas está basado en las probabilidades en cada clase según vaya prediciendo. Mientras que para el caso de los continuos se saca la media.
+* **Residuales: **Se muestran los residuos después de la primera iteración, calculados como la diferencia entre las predicciones actuales y las etiquetas verdaderas. Los residuos muestran qué tan lejos están las predicciones actuales de las etiquetas verdaderas para cada ejemplo.
+* **Reglas para los otros features del Stump:** Se muestran los features restantes  donde se especifica el número del feature, la operación y el valor.
+* **Predicciones del stump para una clase:** Se muestran las predicciones iniciales para el stump.
+* **Nuevas predicciones para una clase :** Se muestra las nuevas predicciones tomando en cuenta los residuos del stump anterior.
+* **Exactitud:** Muestra las etiquetas que han predicho correctamente.
+* **Precisión:**  Muestra las etiquetas predichas positivas que son correcta.
+* **Recall:** Muestra las etiquetas positivas reales que se han predicho correctamente.
+* **F1-score:** Muestra la predicción que tuvo el árbol en la fase de prueba
+* **Matriz de confusión: ** Se mostrará la matriz de confusión.
+* **Etiquetas predichas: **Se mostrará cuáles fueron las etiquetas que predijo el modelo.
+* **Etiquetas reales:** Se mostrará cuáles son las etiquetas reales. Con el fin de poder compararlas con las etiquetas predichas.
+
+####Salida para variables continuas
+* **Gamma:** Medida de regularización.
+# Linear Regresion
+
+##1) Dataset
+**1. california_housing:** Es un dataset tomado de la libreria de Sklearn, el cual como
+* **Target:**  MedHouseVal: Valor promedio de las casas en la zona (en dólares).
+* **Características:**
+1. MedInc: Ingreso medio de los hogares en la zona (en dólares).
+2. HouseAge: Promedio de los años de las casas en la zona.
+3. AveRooms: Promedio del número de habitaciones por hogar.
+4. AveBedrms: Promedio del número de dormitorios por hogar.
+4. Population: Población de la zona.
+5. AveOccup: Promedio del número de ocupantes por hogar.
+6. Latitude: Latitud de la zona.
+7. Longitude: Longitud de la zona.
+
+## 2) Ejecución
+Para poder ejecutar el script correspondiente, es necesario seguir cada uno de los siguientes pasos:
+1. Abrir Anaconda Prompt. 
+2. Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando **cd** en la consola de Anaconda Prompt, en donde se encuentran el script correspondiente al dataset. 
+3. Una vez ubicado en el directorio de las **'demos'**, se podrá ejecutar  el script. Es necesario colocar los siguientes comando para ejecutarlo:
+*   Para poder ejecutar el DTGB de ** california_housing.csv: **
+```
+python california_housing.py
+```
+
+## 2) Salida
+* **Generación de imagen:** Se muestra una gráfica, mostrando las predicciones y los valores verdaderos con una tendencia lineal.
+* **Mean Squared Error:** Se muestra el error cuadrado medio
+
+#Logistic Regresion
+##1) Dataset
+**1. breast_cancer:** Es un dataset tomado de Sklearn el cual contiene 
+* **Target:** Tipo cancer: Maligno = 0 y Benigno = 1.
+* **Características:** Medias: radius,  texture,  perimeter, area,  smoothness,  compactness,  concavity, concave points, symmetry, fractal dimension; erores: radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, fractal dimension; peor: radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, fractal dimension.
+
+## 2) Ejecución
+Para poder ejecutar el script correspondiente, es necesario seguir cada uno de los siguientes pasos:
+1. Abrir Anaconda Prompt. 
+2. Se debe de ubicar en el directorio Scikitty en la caperta 'demos' utilizando el comando **cd** en la consola de Anaconda Prompt, en donde se encuentran el script correspondiente al dataset. 
+3. Una vez ubicado en el directorio de las **'demos'**, se podrá ejecutar  el script. Es necesario colocar los siguientes comando para ejecutarlo:
+*   Para poder ejecutar el DTGB de ** breast_cancer: **
+```
+python breast_cancer.py
+```
+
+## 2) Salida
+* **Exactitud:** Muestra las etiquetas que han predicho correctamente.
+* **Precisión:**  Muestra las etiquetas predichas positivas que son correcta.
+* **Recall:** Muestra las etiquetas positivas reales que se han predicho correctamente.
+* **F1-score:** Muestra la predicción que tuvo el árbol en la fase de prueba
+* **Matriz de confusión: ** Se mostrará la matriz de confusión.
 
 ## Información Adicional
 Scikitty es una libreria de Python que simula el comportamiento de la libreria Scikitlearn. Es un proyecto desarrollado por Axel Monge Ramírez, Andrel Ramírez Solis, John Rojas Chinchilla y Abigail Salas Ramírez. Estudiantes de la Universidad Nacional de Costa Rica, matriculados en el curso de Inteligencia Artificial (EIF420-O) durante el primer semestre del 2024 en la Facultad de Ciencias Exactas. Este proyecto representa sus esfuerzos de colaboración y puede comunicarse con ellos por correo electrónico:  axel.monge.ramirez@est.una.ac.cr, andrel.ramirez.solis@est.una.ac.cr, john.rojas.chinchilla@est.una.ac.cr y abigail.salas.ramirez@est.una.ac.cr.
