@@ -1,7 +1,13 @@
+#Proyecto
+En el siguiente trabajo se implementarán dos modelos de machine learning, como lo son Decision Tree y Decision Tree Gradient Boosting. Además, como extras: Logistic Regression y Linear Regression.  En este apartado se explicará la implementación de las dependencias y cómo paso a paso se podrá ejecutar cada uno de los demos de este proyecto, también se comentarán a detalle cada uno de los datasets que se estarán usando en los modelos, así como el significado de cada salida mostrada en consola, teniendo la posibilidad de poder compararlo con las implementaciones que cuenta SKLearn. 
+Es necesario tener en cuenta que la compilación del árbol a prolog se demuestra en el proyecto de la pagina web, el cual tiene su propio README.
+A continuación se hablará en más detalle los modelos creados
+
 # Scikitty
 
 ## 1) Descripción del sprint #2 del proyecto
-En el siguiente sprint se podrán observar la continuación de la implementación y la creación del modelo de árbol de decisión para variables categóricas multiclase, continuas y binarias. Además de la implementación del un modelo de Tree Gradient Decisition Boosting 
+En el siguiente sprint se podrán observar la continuación de la implementación y la creación del modelo de árbol de decisión para variables categóricas multiclase, continuas y binarias. Además de la implementación del un modelo de Decisition Tree Gradient Boosting para las mismas variables, que permite observar cada una de las iteraciones, así como los resultados que va obteniendo cada stump del modelo.
+Como extra, se podrá ejecutar Linear Regression para el dataset california_housing por medio de la librería Sklearn, así mismo la implementación y ejecución de Logistic Regression para el dataset breast_cancer, tomado de la misma librería.
 
 ## 2) Ambiente:
 Este proyecto se deberá de correr desde el prompt Anaconda, en donde se deberá de tener instalado las librerias graphviz, pandas y numpy. Siguiendo los siguientes pasos, se prepará el ambiente para poder utilizar las demos del proyecto:
@@ -49,9 +55,13 @@ El modelo busca predecir si una persona juega o no tennis por medio de caracter�
 
 
 **4. CO2_car_emision.csv:**
+
+El modelo busca predecir la cantidad de CO2 que genera un automóvil, según marca, modelo, volumen y peso del automóvil.
+
 * **Target:** CO2.
 * **Características:** Car, Model, Volume, Weight.
-El modelo busca predecir la cantidad de CO2 que genera un automóvil, según marca, modelo, volumen y peso del automóvil.
+
+En este proyecto también se incluirán datasets de los cuales no se contarán con demos, como lo son: titanic, penguins_gender, diabetes, cancer, diabetes, iris, entre otros.
 
 ## 4) ¿Cómo ejecutar el proyecto?
 Dentro de la carpeta raiz del proyecto **"Scikitty"**, se encontrá una carpeta llamada **"demos"**. Aquí se almacenan cada uno de los scripts con las demos para cada uno de los datasets planteados. Siendo estas las implementaciones de  **"Scikitty"**,  **"Scikitlearn**,  **"Boosting"**,  **"Linear Regression"** y  **"Logistic Regression"**. Para poder ejecutar cada uno de los scripts, es necesario seguir cada uno de los siguientes pasos:
